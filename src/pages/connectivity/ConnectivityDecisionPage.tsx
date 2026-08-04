@@ -17,7 +17,7 @@ import { useAxion } from "@/context/AxionContext";
 import { SOURCE_SYSTEMS } from "@/data/sourceCatalog";
 import { DATA_PRODUCT_TEMPLATES } from "@/data/dataProductLibrary";
 import { DECISION_CRITERIA } from "@/data/connectivityCatalog";
-import { decisionMatrixCsv, decisionReportMarkdown } from "@/services/connectivityEngine";
+import { decisionMatrixCsv, decisionReportMarkdown, evaluateConnectivity } from "@/services/connectivityEngine";
 import {
   useActivePhase4InitiativeId,
   useConnectivityAssessments,
@@ -178,7 +178,7 @@ const ConnectivityDecisionPage = () => {
   const exportCsv = () => {
     const rows = list
       .map((assessment) => {
-        const evaluated = useConnectivityEvaluationStatic(assessment, policy.data);
+        const evaluated = assessment.answers && Object.keys(assessment.answers).length ? evaluateConnectivity(assessment, { policy: policy.data }) : undefined;
         if (!evaluated) return null;
         const decision = decisions.data?.find((entry) => entry.assessmentId === assessment.id);
         return {
@@ -549,8 +549,5 @@ const ConnectivityDecisionPage = () => {
     </div>
   );
 };
-
-/** Pure re-export so the CSV export loop can score every assessment without invoking a hook in a loop. */
-import { evaluateConnectivity as useConnectivityEvaluationStatic } from "@/services/connectivityEngine";
 
 export default ConnectivityDecisionPage;
