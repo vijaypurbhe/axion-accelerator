@@ -1,0 +1,255 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+@layer base {
+  :root {
+    /* PHOENIX 360 — institutional light theme */
+    --background: 0 0% 100%;
+    --foreground: 214 33% 17%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 214 33% 17%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 214 33% 17%;
+
+    /* Deep institutional navy #0B3B60 */
+    --primary: 206 79% 21%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Institutional blue #185F8C */
+    --brand-blue: 203 71% 32%;
+    --brand-blue-foreground: 0 0% 100%;
+
+    /* Muted teal #3E7F8F */
+    --teal: 192 39% 40%;
+    --teal-foreground: 0 0% 100%;
+
+    /* Light teal #DDEFF2 */
+    --teal-soft: 189 45% 91%;
+    --teal-soft-foreground: 206 79% 21%;
+
+    --secondary: 210 25% 97%;
+    --secondary-foreground: 206 79% 21%;
+
+    --muted: 210 25% 97%;
+    --muted-foreground: 218 19% 40%;
+
+    --accent: 189 45% 91%;
+    --accent-foreground: 206 79% 21%;
+
+    /* Critical red #C53A4A */
+    --destructive: 353 55% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Muted gold #C79A4B */
+    --warning: 38 53% 54%;
+    --warning-foreground: 30 45% 14%;
+
+    /* Restrained green #16866B */
+    --success: 165 72% 31%;
+    --success-foreground: 0 0% 100%;
+
+    --info: 203 71% 32%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 207 30% 88%;
+    --input: 207 30% 88%;
+    --ring: 203 71% 32%;
+
+    --radius: 0.625rem;
+
+    --surface: 210 25% 97%;
+    --surface-foreground: 214 33% 17%;
+
+    --chart-1: 206 79% 25%;
+    --chart-2: 203 71% 40%;
+    --chart-3: 192 39% 45%;
+    --chart-4: 165 72% 31%;
+    --chart-5: 38 53% 54%;
+    --chart-6: 353 55% 50%;
+
+    --shadow-card: 0 1px 2px 0 hsl(214 33% 17% / 0.04), 0 1px 3px 0 hsl(214 33% 17% / 0.06);
+    --shadow-raised: 0 2px 6px -1px hsl(214 33% 17% / 0.08), 0 10px 24px -12px hsl(206 79% 21% / 0.22);
+    --shadow-panel: 0 24px 60px -28px hsl(206 79% 21% / 0.3);
+
+    --sidebar-background: 206 79% 21%;
+    --sidebar-foreground: 200 40% 86%;
+    --sidebar-primary: 189 45% 91%;
+    --sidebar-primary-foreground: 206 79% 21%;
+    --sidebar-accent: 205 62% 27%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 205 55% 28%;
+    --sidebar-ring: 189 45% 91%;
+  }
+
+  .dark {
+    --background: 208 40% 8%;
+    --foreground: 200 30% 92%;
+
+    --card: 207 34% 11%;
+    --card-foreground: 200 30% 92%;
+
+    --popover: 207 34% 11%;
+    --popover-foreground: 200 30% 92%;
+
+    --primary: 200 60% 62%;
+    --primary-foreground: 208 40% 8%;
+
+    --brand-blue: 203 62% 52%;
+    --brand-blue-foreground: 208 40% 8%;
+
+    --teal: 192 40% 55%;
+    --teal-foreground: 208 40% 8%;
+
+    --teal-soft: 200 30% 20%;
+    --teal-soft-foreground: 200 30% 92%;
+
+    --secondary: 207 26% 16%;
+    --secondary-foreground: 200 30% 92%;
+
+    --muted: 207 26% 16%;
+    --muted-foreground: 205 16% 66%;
+
+    --accent: 207 30% 19%;
+    --accent-foreground: 200 30% 92%;
+
+    --destructive: 353 60% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 38 60% 62%;
+    --warning-foreground: 30 45% 10%;
+
+    --success: 165 55% 46%;
+    --success-foreground: 208 40% 8%;
+
+    --info: 203 62% 56%;
+    --info-foreground: 208 40% 8%;
+
+    --border: 206 22% 22%;
+    --input: 206 22% 24%;
+    --ring: 200 60% 62%;
+
+    --surface: 207 30% 13%;
+    --surface-foreground: 200 30% 92%;
+
+    --chart-1: 200 60% 62%;
+    --chart-2: 203 62% 52%;
+    --chart-3: 192 40% 55%;
+    --chart-4: 165 55% 46%;
+    --chart-5: 38 60% 62%;
+    --chart-6: 353 60% 58%;
+
+    --shadow-card: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
+    --shadow-raised: 0 10px 30px -14px hsl(0 0% 0% / 0.6);
+    --shadow-panel: 0 28px 70px -30px hsl(0 0% 0% / 0.8);
+
+    --sidebar-background: 208 42% 7%;
+    --sidebar-foreground: 200 24% 80%;
+    --sidebar-primary: 200 60% 62%;
+    --sidebar-primary-foreground: 208 42% 7%;
+    --sidebar-accent: 207 28% 16%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 206 24% 18%;
+    --sidebar-ring: 200 60% 62%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04";
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  h1, h2, h3, h4 {
+    @apply tracking-[-0.016em];
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--foreground) / 0.18);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--foreground) / 0.3);
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer components {
+  .card-surface {
+    @apply rounded-xl border border-border bg-card;
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-hover {
+    @apply transition-all duration-200;
+  }
+  .card-hover:hover {
+    box-shadow: var(--shadow-raised);
+    transform: translateY(-2px);
+    border-color: hsl(var(--brand-blue) / 0.35);
+  }
+
+  .app-canvas {
+    background-image:
+      radial-gradient(1100px 420px at 12% -8%, hsl(var(--brand-blue) / 0.07), transparent 65%),
+      radial-gradient(900px 380px at 92% 0%, hsl(var(--teal) / 0.08), transparent 60%);
+  }
+
+  .kpi-value {
+    @apply text-[2rem] font-semibold leading-none tracking-[-0.03em];
+    font-variant-numeric: tabular-nums;
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .label-caps {
+    @apply text-[0.6875rem] font-semibold uppercase tracking-[0.09em] text-muted-foreground;
+  }
+
+  .data-grid-row {
+    @apply border-b border-border/70 transition-colors duration-150 hover:bg-secondary;
+  }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
