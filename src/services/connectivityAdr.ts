@@ -65,6 +65,7 @@ const buildAdr = (ctx: ConnectivityAdrContext, actor: ActorContext, existing?: A
 
   return {
     id: existing?.id ?? adrIdFor(ctx.assessment.id),
+    createdBy: existing?.createdBy ?? actor.actor,
     initiativeId: ctx.assessment.initiativeId,
     reference: existing?.reference ?? `ADR-CONN-${ctx.assessment.id.slice(-6).toUpperCase()}`,
     title: `Connectivity pattern for ${ctx.sourceName} → ${ctx.productName}`,
