@@ -24,13 +24,13 @@ import DataProductBuilderPage from "@/pages/dataproducts/DataProductBuilderPage"
 import SourceCatalogPage from "@/pages/dataproducts/SourceCatalogPage";
 import MappingWorkbenchPage from "@/pages/dataproducts/MappingWorkbenchPage";
 import ConnectivityDecisionPage from "@/pages/connectivity/ConnectivityDecisionPage";
+import IdentityStudioPage from "@/pages/identity/IdentityStudioPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import {
   AdministrationPage,
   AgentforceStudioPage,
   DeploymentPage,
   GovernanceRiskPage,
-  IdentityPage,
   MonitoringPage,
   TemplatesPage,
   TrustCompliancePage,
@@ -67,7 +67,7 @@ const App = () => (
               <Route path="/sources" element={<SourceCatalogPage />} />
               <Route path="/mapping" element={<MappingWorkbenchPage />} />
               <Route path="/connectivity" element={<ConnectivityDecisionPage />} />
-              <Route path="/identity" element={<IdentityPage />} />
+              <Route path="/identity" element={<IdentityStudioPage />} />
               <Route path="/trust-compliance" element={<TrustCompliancePage />} />
               <Route path="/governance-risk" element={<GovernanceRiskPage />} />
               <Route path="/agentforce-studio" element={<AgentforceStudioPage />} />
