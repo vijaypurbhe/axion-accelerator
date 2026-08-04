@@ -1,9 +1,14 @@
-import { Navigate } from "react-router-dom";
-import { usePhoenix } from "@/context/PhoenixContext";
-import type { ReactNode } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAxion } from "@/context/AxionContext";
 
-export default function RequireAuth({ children }: { children: ReactNode }) {
-  const { signedIn } = usePhoenix();
-  if (!signedIn) return <Navigate to="/login" replace />;
+export const RequireAuth = ({ children }: { children: React.ReactNode }) => {
+  const { session } = useAxion();
+  const location = useLocation();
+
+  if (!session) {
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  }
   return <>{children}</>;
-}
+};
+
+export default RequireAuth;
