@@ -67,7 +67,7 @@ const InitiativeDashboardPage = () => {
   const openRisks = (risks.data ?? []).filter((risk) => risk.status !== "closed");
   const pendingApprovals = (approvals.data ?? []).filter((approval) => approval.state === "submitted");
   const stageTasks = tasks.data ?? [];
-  const doneTasks = stageTasks.filter((task) => task.status === "done").length;
+  const doneTasks = stageTasks.filter((task) => task.status === "approved").length;
 
   return (
     <div className="space-y-6">
@@ -91,7 +91,7 @@ const InitiativeDashboardPage = () => {
         description="Advance the initiative only when the stage exit criteria are met."
       >
         <StageStepper
-          currentStage={record.currentStage}
+          current={record.currentStage}
           onSelect={
             roleCan(persona, "edit")
               ? (stageId) => setStage.mutate({ initiativeId: record.id, stage: stageId })
@@ -127,9 +127,9 @@ const InitiativeDashboardPage = () => {
             columns={[
               { key: "name", header: "Task", render: (task) => <span className="font-medium text-foreground">{task.name}</span> },
               { key: "stage", header: "Stage", render: (task) => <MetaPill>{task.stage}</MetaPill> },
-              { key: "owner", header: "Owner role", render: (task) => task.ownerRole },
+              { key: "owner", header: "Owner role", render: (task) => task.owner },
               { key: "status", header: "Status", render: (task) => task.status },
-              { key: "due", header: "Due", align: "right", render: (task) => (task.dueDate ? shortDate(task.dueDate) : "—") },
+              { key: "due", header: "Due", align: "right", render: (task) => shortDate(task.dueDate) },
             ]}
           />
         </SectionCard>
@@ -140,9 +140,8 @@ const InitiativeDashboardPage = () => {
             rowKey={(milestone) => milestone.id}
             columns={[
               { key: "name", header: "Milestone", render: (m) => <span className="font-medium text-foreground">{m.name}</span> },
-              { key: "stage", header: "Stage", render: (m) => <MetaPill>{m.stage}</MetaPill> },
-              { key: "status", header: "Status", render: (m) => m.status },
-              { key: "date", header: "Date", align: "right", render: (m) => shortDate(m.dueDate) },
+                            { key: "status", header: "Status", render: (m) => m.status },
+              { key: "date", header: "Date", align: "right", render: (m) => shortDate(m.date) },
             ]}
           />
         </SectionCard>
