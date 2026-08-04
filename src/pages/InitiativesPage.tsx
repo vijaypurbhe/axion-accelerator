@@ -105,7 +105,7 @@ const InitiativesPage = () => {
         {rows.length === 0 ? (
           <EmptyState
             title="No initiatives match the filters"
-            description="Adjust the filters, or create a new initiative for this client."
+            message="Adjust the filters, or create a new initiative for this client."
           />
         ) : (
           <DataTable
