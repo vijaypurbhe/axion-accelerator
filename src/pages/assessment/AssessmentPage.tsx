@@ -144,7 +144,7 @@ const AssessmentPage = () => {
               <div className="flex flex-wrap items-center gap-3">
                 <MaturityBadge level={categoryScore?.maturity ?? 1} />
                 <span className="text-sm text-foreground">
-                  Score {categoryScore?.score ?? 0} / target {activeCategory.targetScore}
+                  Score {categoryScore?.score ?? 0} / target {TARGET_SCORE}
                 </span>
                 <Badge variant="outline" className="text-[11px]">
                   Weight {activeCategory.weight.toFixed(1)}
