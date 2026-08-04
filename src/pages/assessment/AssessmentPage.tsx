@@ -58,10 +58,13 @@ const AssessmentPage = () => {
   const activeCategory = assessmentCategory(category);
   const categoryScore = summary.categories.find((entry) => entry.categoryId === category);
 
+  /** BFSI target band: "Managed" (70) is the minimum acceptable score for every category. */
+  const TARGET_SCORE = 70;
+
   const radarData = summary.categories.map((entry) => ({
-    category: assessmentCategory(entry.categoryId).shortName,
+    category: assessmentCategory(entry.categoryId).name.split(" ")[0],
     score: entry.score,
-    target: assessmentCategory(entry.categoryId).targetScore,
+    target: TARGET_SCORE,
   }));
 
   const stageData = summary.byStage.map((entry) => ({ stage: entry.stage, score: entry.score }));
