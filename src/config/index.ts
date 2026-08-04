@@ -23,6 +23,6 @@ export const config: AxionConfig = {
   dataMode: mode === "live" ? "live" : "mock",
   environmentLabel: readEnv("VITE_AXION_ENVIRONMENT") ?? (import.meta.env.PROD ? "Production" : "Sandbox"),
   apiBaseUrl: readEnv("VITE_AXION_API_BASE_URL") ?? null,
-  defaultTenantId: readEnv("VITE_AXION_DEFAULT_TENANT") ?? "tnt-northbank",
+  defaultTenantId: readEnv("VITE_AXION_DEFAULT_TENANT") ?? "cli-northstar",
   emailDomain: readEnv("VITE_AXION_EMAIL_DOMAIN") ?? "techmahindra.com",
 };

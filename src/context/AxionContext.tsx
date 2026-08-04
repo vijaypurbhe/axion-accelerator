@@ -5,11 +5,16 @@ import type { PersonaId, Session } from "@/domain/types";
 
 const SESSION_KEY = "axion.session";
 const TENANT_KEY = "axion.tenantId";
+const INITIATIVE_KEY = "axion.initiativeId";
 
 interface AxionContextValue {
   readonly session: Session | null;
   readonly persona: PersonaId;
   readonly activeTenantId: string;
+  /** Active client workspace (alias of the tenant id). */
+  readonly activeClientId: string;
+  readonly activeInitiativeId: string | null;
+  setActiveInitiativeId: (initiativeId: string | null) => void;
   signIn: (input: { email: string; persona: PersonaId }) => Session;
   signOut: () => void;
   setPersona: (persona: PersonaId) => void;
@@ -36,6 +41,11 @@ const readTenantId = (): string => {
   return window.localStorage.getItem(TENANT_KEY) ?? config.defaultTenantId;
 };
 
+const readInitiativeId = (): string | null => {
+  if (typeof window === "undefined") return null;
+  return window.localStorage.getItem(INITIATIVE_KEY);
+};
+
 const displayNameFromEmail = (email: string): string =>
   email
     .split("@")[0]
@@ -47,6 +57,7 @@ const displayNameFromEmail = (email: string): string =>
 export const AxionProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(() => readSession());
   const [activeTenantId, setActiveTenantIdState] = useState<string>(() => readTenantId());
+  const [activeInitiativeId, setActiveInitiativeIdState] = useState<string | null>(() => readInitiativeId());
 
   useEffect(() => {
     if (session) window.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -56,6 +67,11 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     window.localStorage.setItem(TENANT_KEY, activeTenantId);
   }, [activeTenantId]);
+
+  useEffect(() => {
+    if (activeInitiativeId) window.localStorage.setItem(INITIATIVE_KEY, activeInitiativeId);
+    else window.localStorage.removeItem(INITIATIVE_KEY);
+  }, [activeInitiativeId]);
 
   const signIn = useCallback(({ email, persona }: { email: string; persona: PersonaId }) => {
     const next: Session = {
@@ -74,19 +90,29 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
     setSession((current) => (current ? { ...current, persona } : current));
   }, []);
 
-  const setActiveTenantId = useCallback((tenantId: string) => setActiveTenantIdState(tenantId), []);
+  const setActiveTenantId = useCallback((tenantId: string) => {
+    setActiveTenantIdState(tenantId);
+    setActiveInitiativeIdState(null);
+  }, []);
+
+  const setActiveInitiativeId = useCallback((initiativeId: string | null) => {
+    setActiveInitiativeIdState(initiativeId);
+  }, []);
 
   const value = useMemo<AxionContextValue>(
     () => ({
       session,
       persona: session?.persona ?? PERSONAS[0].id,
       activeTenantId,
+      activeClientId: activeTenantId,
+      activeInitiativeId,
+      setActiveInitiativeId,
       signIn,
       signOut,
       setPersona,
       setActiveTenantId,
     }),
-    [session, activeTenantId, signIn, signOut, setPersona, setActiveTenantId],
+    [session, activeTenantId, activeInitiativeId, setActiveInitiativeId, signIn, signOut, setPersona, setActiveTenantId],
   );
 
   return <AxionContext.Provider value={value}>{children}</AxionContext.Provider>;
