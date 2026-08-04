@@ -28,8 +28,6 @@ import NotFoundPage from "@/pages/NotFoundPage";
 import {
   AdministrationPage,
   AgentforceStudioPage,
-  ConnectivityPage,
-  DataProductsPage,
   DeploymentPage,
   GovernanceRiskPage,
   IdentityPage,
