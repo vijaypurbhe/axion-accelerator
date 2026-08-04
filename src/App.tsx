@@ -18,15 +18,19 @@ import ArchitectureStudioPage from "@/pages/architecture/ArchitectureStudioPage"
 import AiRecommendationsPage from "@/pages/AiRecommendationsPage";
 import AuditPage from "@/pages/AuditPage";
 import CatalogPage from "@/pages/CatalogPage";
+import DataProductLibraryPage from "@/pages/dataproducts/DataProductLibraryPage";
+import DataProductDetailPage from "@/pages/dataproducts/DataProductDetailPage";
+import DataProductBuilderPage from "@/pages/dataproducts/DataProductBuilderPage";
+import SourceCatalogPage from "@/pages/dataproducts/SourceCatalogPage";
+import MappingWorkbenchPage from "@/pages/dataproducts/MappingWorkbenchPage";
+import ConnectivityDecisionPage from "@/pages/connectivity/ConnectivityDecisionPage";
+import IdentityStudioPage from "@/pages/identity/IdentityStudioPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import {
   AdministrationPage,
   AgentforceStudioPage,
-  ConnectivityPage,
-  DataProductsPage,
   DeploymentPage,
   GovernanceRiskPage,
-  IdentityPage,
   MonitoringPage,
   TemplatesPage,
   TrustCompliancePage,
@@ -57,9 +61,13 @@ const App = () => (
               <Route path="/initiatives/:initiativeId" element={<InitiativeDashboardPage />} />
               <Route path="/assessments" element={<AssessmentPage />} />
               <Route path="/architecture" element={<ArchitectureStudioPage />} />
-              <Route path="/data-products" element={<DataProductsPage />} />
-              <Route path="/connectivity" element={<ConnectivityPage />} />
-              <Route path="/identity" element={<IdentityPage />} />
+              <Route path="/data-products" element={<DataProductLibraryPage />} />
+              <Route path="/data-products/new" element={<DataProductBuilderPage />} />
+              <Route path="/data-products/:productId" element={<DataProductDetailPage />} />
+              <Route path="/sources" element={<SourceCatalogPage />} />
+              <Route path="/mapping" element={<MappingWorkbenchPage />} />
+              <Route path="/connectivity" element={<ConnectivityDecisionPage />} />
+              <Route path="/identity" element={<IdentityStudioPage />} />
               <Route path="/trust-compliance" element={<TrustCompliancePage />} />
               <Route path="/governance-risk" element={<GovernanceRiskPage />} />
               <Route path="/agentforce-studio" element={<AgentforceStudioPage />} />

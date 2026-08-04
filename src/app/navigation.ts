@@ -32,6 +32,8 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { title: "Assessments", url: "/assessments", icon: Gauge, group: "Workspace" },
   { title: "Architecture", url: "/architecture", icon: Network, group: "Design & Build" },
   { title: "Data Products", url: "/data-products", icon: Database, group: "Design & Build" },
+  { title: "Source Catalog", url: "/sources", icon: Library, group: "Design & Build" },
+  { title: "Mapping Workbench", url: "/mapping", icon: FileStack, group: "Design & Build" },
   { title: "Connectivity", url: "/connectivity", icon: Building2, group: "Design & Build" },
   { title: "Identity", url: "/identity", icon: Users, group: "Design & Build" },
   { title: "Trust & Compliance", url: "/trust-compliance", icon: ShieldCheck, group: "Assurance" },
