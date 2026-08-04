@@ -12,6 +12,9 @@ import InitiativeDashboardPage from "@/pages/InitiativeDashboardPage";
 import OverviewPage from "@/pages/OverviewPage";
 import ProgramsPage from "@/pages/ProgramsPage";
 import LifecycleStagePage from "@/pages/lifecycle/LifecycleStagePage";
+import LifecycleManagerPage from "@/pages/lifecycle/LifecycleManagerPage";
+import AssessmentPage from "@/pages/assessment/AssessmentPage";
+import ArchitectureStudioPage from "@/pages/architecture/ArchitectureStudioPage";
 import AiRecommendationsPage from "@/pages/AiRecommendationsPage";
 import AuditPage from "@/pages/AuditPage";
 import CatalogPage from "@/pages/CatalogPage";
@@ -19,8 +22,6 @@ import NotFoundPage from "@/pages/NotFoundPage";
 import {
   AdministrationPage,
   AgentforceStudioPage,
-  ArchitecturePage,
-  AssessmentsPage,
   ConnectivityPage,
   DataProductsPage,
   DeploymentPage,
@@ -54,8 +55,8 @@ const App = () => (
               <Route path="/portfolio" element={<PortfolioPage />} />
               <Route path="/initiatives" element={<InitiativesPage />} />
               <Route path="/initiatives/:initiativeId" element={<InitiativeDashboardPage />} />
-              <Route path="/assessments" element={<AssessmentsPage />} />
-              <Route path="/architecture" element={<ArchitecturePage />} />
+              <Route path="/assessments" element={<AssessmentPage />} />
+              <Route path="/architecture" element={<ArchitectureStudioPage />} />
               <Route path="/data-products" element={<DataProductsPage />} />
               <Route path="/connectivity" element={<ConnectivityPage />} />
               <Route path="/identity" element={<IdentityPage />} />
@@ -67,6 +68,9 @@ const App = () => (
               <Route path="/monitoring" element={<MonitoringPage />} />
               <Route path="/templates" element={<TemplatesPage />} />
               <Route path="/administration" element={<AdministrationPage />} />
+
+              <Route path="/lifecycle-manager" element={<Navigate to="/lifecycle-manager/discover" replace />} />
+              <Route path="/lifecycle-manager/:stageId" element={<LifecycleManagerPage />} />
 
               <Route path="/overview" element={<OverviewPage />} />
               <Route path="/programs" element={<ProgramsPage />} />

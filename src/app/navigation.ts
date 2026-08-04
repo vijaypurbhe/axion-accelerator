@@ -28,6 +28,7 @@ export interface NavItem {
 export const NAV_ITEMS: readonly NavItem[] = [
   { title: "Portfolio", url: "/portfolio", icon: LayoutDashboard, group: "Workspace" },
   { title: "Initiatives", url: "/initiatives", icon: Boxes, group: "Workspace" },
+  { title: "Lifecycle Manager", url: "/lifecycle-manager", icon: Library, group: "Workspace" },
   { title: "Assessments", url: "/assessments", icon: Gauge, group: "Workspace" },
   { title: "Architecture", url: "/architecture", icon: Network, group: "Design & Build" },
   { title: "Data Products", url: "/data-products", icon: Database, group: "Design & Build" },
