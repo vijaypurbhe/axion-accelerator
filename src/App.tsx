@@ -1,36 +1,30 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { PhoenixProvider } from "@/context/PhoenixContext";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/toaster";
+import { AxionProvider } from "@/context/AxionContext";
 import AppShell from "@/components/layout/AppShell";
 import RequireAuth from "@/components/layout/RequireAuth";
-import Login from "@/pages/Login";
-import Home from "@/pages/Home";
-import ClientsPage from "@/pages/ClientsPage";
-import ClientDetailPage from "@/pages/ClientDetailPage";
-import ProjectsPage from "@/pages/ProjectsPage";
-import ProjectDetailPage from "@/pages/ProjectDetailPage";
-import AnalyticsPage from "@/pages/AnalyticsPage";
-import ExposureCompliancePage from "@/pages/ExposureCompliancePage";
-import DocumentReviewPage from "@/pages/DocumentReviewPage";
-import SearchPage from "@/pages/SearchPage";
-import NotFound from "@/pages/NotFound";
+import LoginPage from "@/pages/LoginPage";
+import OverviewPage from "@/pages/OverviewPage";
+import ProgramsPage from "@/pages/ProgramsPage";
+import LifecycleStagePage from "@/pages/lifecycle/LifecycleStagePage";
+import AiRecommendationsPage from "@/pages/AiRecommendationsPage";
+import AuditPage from "@/pages/AuditPage";
+import CatalogPage from "@/pages/CatalogPage";
+import NotFoundPage from "@/pages/NotFoundPage";
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 30_000, refetchOnWindowFocus: false } },
+  defaultOptions: { queries: { staleTime: 30_000, retry: 1, refetchOnWindowFocus: false } },
 });
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <PhoenixProvider>
+    <AxionProvider>
       <TooltipProvider delayDuration={200}>
-        <Toaster />
-        <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route
               element={
                 <RequireAuth>
@@ -38,23 +32,21 @@ const App = () => (
                 </RequireAuth>
               }
             >
-              <Route path="/" element={<Navigate to="/home" replace />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/clients" element={<ClientsPage />} />
-              <Route path="/clients/:clientId" element={<ClientDetailPage />} />
-              <Route path="/projects" element={<ProjectsPage />} />
-              <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
-              <Route path="/analytics" element={<AnalyticsPage />} />
-              <Route path="/exposure" element={<ExposureCompliancePage />} />
-              <Route path="/documents/:documentId" element={<DocumentReviewPage />} />
-
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="*" element={<NotFound />} />
+              <Route path="/" element={<Navigate to="/overview" replace />} />
+              <Route path="/overview" element={<OverviewPage />} />
+              <Route path="/programs" element={<ProgramsPage />} />
+              <Route path="/lifecycle" element={<Navigate to="/lifecycle/discover" replace />} />
+              <Route path="/lifecycle/:stageId" element={<LifecycleStagePage />} />
+              <Route path="/ai-recommendations" element={<AiRecommendationsPage />} />
+              <Route path="/audit" element={<AuditPage />} />
+              <Route path="/catalog" element={<CatalogPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
+        <Toaster />
       </TooltipProvider>
-    </PhoenixProvider>
+    </AxionProvider>
   </QueryClientProvider>
 );
 
