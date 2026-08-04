@@ -7,7 +7,7 @@ import { FilterBar } from "@/components/enterprise/FilterBar";
 import { ErrorState, LoadingState } from "@/components/enterprise/States";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CATEGORY_LABELS, DOMAIN_LABELS, STATE_LABELS } from "@/data/dataProductLibrary";
+import { CATEGORY_LABELS, DOMAIN_LABELS, STATE_LABELS } from "@/domain/dataProducts";
 import { productCompleteness, mappingCoverage } from "@/services/dataQuality";
 import { useActiveInitiativeId, useDataProducts, useDataProductTemplates, useFieldMappings } from "@/hooks/usePhase3";
 import type { DataProduct, DataProductCategory } from "@/domain/dataProducts";

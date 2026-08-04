@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable, type DataTableColumn } from "@/components/enterprise/DataTable";
-import { CATEGORY_LABELS, DOMAIN_LABELS, STATE_LABELS, SENSITIVITY_LABELS } from "@/data/dataProductLibrary";
+import { CATEGORY_LABELS, DOMAIN_LABELS, STATE_LABELS, SENSITIVITY_LABELS } from "@/domain/dataProducts";
 import { buildScorecard } from "@/services/dataQuality";
 import {
   useActiveInitiativeId,
