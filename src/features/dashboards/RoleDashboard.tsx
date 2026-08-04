@@ -16,15 +16,15 @@ const PANELS: Record<PersonaId, RolePanel> = {
     headline: "Value, funding and stage-gate posture across the portfolio.",
     focus: ["Business case and benefit tracking", "Stage-gate approvals", "Risk and regulatory exposure"],
     nextBestActions: [
-      { label: "Review approval queue", to: "/approvals" },
-      { label: "Open portfolio risks", to: "/risks" },
+      { label: "Review approval queue", to: "/governance-risk" },
+      { label: "Open portfolio risks", to: "/governance-risk" },
     ],
   },
   "enterprise-architect": {
     headline: "Target architecture coherence and platform decisions.",
     focus: ["Architecture decision records", "Source platform landscape", "Integration patterns"],
     nextBestActions: [
-      { label: "Open decision log", to: "/decisions" },
+      { label: "Open decision log", to: "/architecture" },
       { label: "Review platform catalog", to: "/catalog" },
     ],
   },
@@ -40,7 +40,7 @@ const PANELS: Record<PersonaId, RolePanel> = {
     headline: "Data quality, ownership and regulatory control evidence.",
     focus: ["Data quality states", "Retention and consent controls", "Glossary stewardship"],
     nextBestActions: [
-      { label: "Review governance controls", to: "/governance" },
+      { label: "Review governance controls", to: "/trust-compliance" },
       { label: "Open Validate stage", to: "/lifecycle/validate" },
     ],
   },
@@ -48,7 +48,7 @@ const PANELS: Record<PersonaId, RolePanel> = {
     headline: "Ingestion, pipelines and cached acceleration workloads.",
     focus: ["Connection health", "Physical vs zero-copy patterns", "Transformation build queue"],
     nextBestActions: [
-      { label: "Open connections", to: "/connections" },
+      { label: "Open connections", to: "/connectivity" },
       { label: "Open Configure stage", to: "/lifecycle/configure" },
     ],
   },
@@ -56,7 +56,7 @@ const PANELS: Record<PersonaId, RolePanel> = {
     headline: "Agent design, grounding and trust-layer readiness.",
     focus: ["Agent topics and actions", "Grounding data coverage", "Trust layer guardrails"],
     nextBestActions: [
-      { label: "Open agent designs", to: "/agents" },
+      { label: "Open agent designs", to: "/agentforce-studio" },
       { label: "Open Deploy stage", to: "/lifecycle/deploy" },
     ],
   },
