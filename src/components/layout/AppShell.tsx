@@ -31,9 +31,14 @@ const TopBar = () => {
     <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur">
       <SidebarTrigger aria-label="Toggle navigation" />
       <div className="hidden items-baseline gap-2 md:flex">
-        <span className="text-sm font-semibold tracking-tight text-foreground">Tech Mahindra Axion</span>
-        <span className="text-xs text-muted-foreground">Agent-ready data foundation accelerator</span>
+        <span className="whitespace-nowrap text-sm font-semibold tracking-tight text-foreground">
+          Tech Mahindra Axion
+        </span>
+        <span className="hidden whitespace-nowrap text-xs text-muted-foreground 2xl:inline">
+          Agent-ready data foundation accelerator
+        </span>
       </div>
+
 
       <div className="ml-auto flex items-center gap-2">
         <Badge variant="outline" className="hidden border-border text-muted-foreground sm:inline-flex">
