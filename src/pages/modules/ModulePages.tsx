@@ -75,33 +75,6 @@ export const IdentityPage = () => (
   />
 );
 
-export const TrustCompliancePage = () => (
-  <ModulePlaceholder
-    eyebrow="Assurance"
-    title="Trust & Compliance"
-    description="Trust layer controls, regulatory mapping and evidence capture."
-    capabilities={[
-      "Control library mapped to GLBA, CCPA, GDPR and DORA",
-      "Trust layer guardrail configuration for agents",
-      "Evidence capture linked to approvals",
-      "Shield audit and encryption posture tracking",
-    ]}
-  />
-);
-
-export const GovernanceRiskPage = () => (
-  <ModulePlaceholder
-    eyebrow="Assurance"
-    title="Governance & Risk"
-    description="Stage gates, approvals, risk register and governance forums."
-    capabilities={[
-      "Stage-gate definitions with exit criteria",
-      "Approval routing by role and delegation",
-      "Consolidated risk register with mitigation tracking",
-      "Governance forum agendas and minutes",
-    ]}
-  />
-);
 
 export const AgentforceStudioPage = () => (
   <ModulePlaceholder

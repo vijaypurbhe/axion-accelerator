@@ -25,17 +25,18 @@ import SourceCatalogPage from "@/pages/dataproducts/SourceCatalogPage";
 import MappingWorkbenchPage from "@/pages/dataproducts/MappingWorkbenchPage";
 import ConnectivityDecisionPage from "@/pages/connectivity/ConnectivityDecisionPage";
 import IdentityStudioPage from "@/pages/identity/IdentityStudioPage";
+import TrustCompliancePage from "@/pages/trust/TrustCompliancePage";
+import GovernanceRiskPage from "@/pages/governance/GovernanceRiskPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import {
   AdministrationPage,
   AgentforceStudioPage,
   DeploymentPage,
-  GovernanceRiskPage,
   MonitoringPage,
   TemplatesPage,
-  TrustCompliancePage,
   ValidationPage,
 } from "@/pages/modules/ModulePages";
+
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, retry: 1, refetchOnWindowFocus: false } },
