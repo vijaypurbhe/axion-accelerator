@@ -1,22 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
 import {
-  Activity,
-  Boxes,
-  CheckCircle2,
-  ClipboardCheck,
-  Compass,
-  Gauge,
-  LayoutDashboard,
-  Library,
-  Rocket,
-  Settings2,
-  ShieldCheck,
-  Sparkles,
-  TrendingUp,
-  Workflow,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -28,35 +11,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-
-interface NavItem {
-  readonly title: string;
-  readonly url: string;
-  readonly icon: LucideIcon;
-}
-
-const PROGRAM_ITEMS: readonly NavItem[] = [
-  { title: "Command Overview", url: "/overview", icon: LayoutDashboard },
-  { title: "Clients & Programs", url: "/programs", icon: Boxes },
-];
-
-const LIFECYCLE_ITEMS: readonly NavItem[] = [
-  { title: "Discover", url: "/lifecycle/discover", icon: Compass },
-  { title: "Assess", url: "/lifecycle/assess", icon: Gauge },
-  { title: "Design", url: "/lifecycle/design", icon: Workflow },
-  { title: "Configure", url: "/lifecycle/configure", icon: Settings2 },
-  { title: "Validate", url: "/lifecycle/validate", icon: ClipboardCheck },
-  { title: "Approve", url: "/lifecycle/approve", icon: CheckCircle2 },
-  { title: "Deploy", url: "/lifecycle/deploy", icon: Rocket },
-  { title: "Monitor", url: "/lifecycle/monitor", icon: Activity },
-  { title: "Improve", url: "/lifecycle/improve", icon: TrendingUp },
-];
-
-const GOVERNANCE_ITEMS: readonly NavItem[] = [
-  { title: "AI Recommendations", url: "/ai-recommendations", icon: Sparkles },
-  { title: "Audit Trail", url: "/audit", icon: ShieldCheck },
-  { title: "Platform Catalog", url: "/catalog", icon: Library },
-];
+import { LEGACY_LINKS, NAV_GROUPS, NAV_ITEMS, type NavItem } from "@/app/navigation";
 
 export const AppSidebar = () => {
   const { state } = useSidebar();
@@ -64,7 +19,7 @@ export const AppSidebar = () => {
   const { pathname } = useLocation();
 
   const renderGroup = (label: string, items: readonly NavItem[]) => (
-    <SidebarGroup>
+    <SidebarGroup key={label}>
       <SidebarGroupLabel className="text-[11px] uppercase tracking-[0.14em] text-sidebar-foreground/70">
         {label}
       </SidebarGroupLabel>
@@ -106,9 +61,14 @@ export const AppSidebar = () => {
             )}
           </div>
         </div>
-        {renderGroup("Program", PROGRAM_ITEMS)}
-        {renderGroup("Lifecycle", LIFECYCLE_ITEMS)}
-        {renderGroup("Governance", GOVERNANCE_ITEMS)}
+
+        {NAV_GROUPS.map((group) =>
+          renderGroup(
+            group,
+            NAV_ITEMS.filter((item) => item.group === group),
+          ),
+        )}
+        {renderGroup("Reference", LEGACY_LINKS)}
       </SidebarContent>
     </Sidebar>
   );

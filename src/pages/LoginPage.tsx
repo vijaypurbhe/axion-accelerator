@@ -38,7 +38,7 @@ const LoginPage = () => {
     }
     setError(null);
     signIn({ email: normalized, persona });
-    navigate("/overview", { replace: true });
+    navigate("/portfolio", { replace: true });
   };
 
   return (

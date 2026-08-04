@@ -10,15 +10,15 @@ import type {
 
 export const seedTenants: Tenant[] = [
   {
-    id: "tnt-northbank",
-    name: "Northbank Financial Group",
+    id: "cli-northstar",
+    name: "NorthStar Commercial Bank",
     industry: "BFSI",
     region: "North America",
     segment: "Universal bank",
     createdAt: "2026-02-11T09:00:00Z",
   },
   {
-    id: "tnt-meridian",
+    id: "cli-meridian",
     name: "Meridian Assurance",
     industry: "BFSI",
     region: "EMEA",
@@ -30,7 +30,7 @@ export const seedTenants: Tenant[] = [
 export const seedPrograms: Program[] = [
   {
     id: "prg-nb-foundation",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     name: "Agent-Ready Data Foundation",
     objective: "Establish a governed Data 360 foundation for retail and wealth banking, ready for Agentforce.",
     executiveSponsor: "Chief Data Officer",
@@ -41,7 +41,7 @@ export const seedPrograms: Program[] = [
   },
   {
     id: "prg-nb-service",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     name: "Service Agent Acceleration",
     objective: "Deploy Agentforce service agents grounded on unified customer profiles.",
     executiveSponsor: "Head of Customer Service",
@@ -52,7 +52,7 @@ export const seedPrograms: Program[] = [
   },
   {
     id: "prg-md-claims",
-    tenantId: "tnt-meridian",
+    tenantId: "cli-meridian",
     name: "Claims Intelligence Foundation",
     objective: "Unify policy, claims and party data to accelerate claims decisioning.",
     executiveSponsor: "Chief Operating Officer",
@@ -66,7 +66,7 @@ export const seedPrograms: Program[] = [
 export const seedWorkstreams: Workstream[] = [
   {
     id: "wst-nb-party",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     programId: "prg-nb-foundation",
     name: "Party and Household",
     domain: "Party",
@@ -75,7 +75,7 @@ export const seedWorkstreams: Workstream[] = [
   },
   {
     id: "wst-nb-product",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     programId: "prg-nb-foundation",
     name: "Product and Account",
     domain: "Product",
@@ -84,7 +84,7 @@ export const seedWorkstreams: Workstream[] = [
   },
   {
     id: "wst-nb-engagement",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     programId: "prg-nb-service",
     name: "Service Engagement",
     domain: "Engagement",
@@ -93,7 +93,7 @@ export const seedWorkstreams: Workstream[] = [
   },
   {
     id: "wst-md-claims",
-    tenantId: "tnt-meridian",
+    tenantId: "cli-meridian",
     programId: "prg-md-claims",
     name: "Claims and Policy",
     domain: "Claims",
@@ -105,7 +105,7 @@ export const seedWorkstreams: Workstream[] = [
 export const seedUseCases: UseCase[] = [
   {
     id: "uc-nb-single-party",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     programId: "prg-nb-foundation",
     workstreamId: "wst-nb-party",
     name: "Single resolved party view",
@@ -117,7 +117,7 @@ export const seedUseCases: UseCase[] = [
   },
   {
     id: "uc-nb-next-best-action",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     programId: "prg-nb-foundation",
     workstreamId: "wst-nb-product",
     name: "Relationship next best action",
@@ -129,7 +129,7 @@ export const seedUseCases: UseCase[] = [
   },
   {
     id: "uc-nb-service-agent",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     programId: "prg-nb-service",
     workstreamId: "wst-nb-engagement",
     name: "Grounded service agent",
@@ -141,7 +141,7 @@ export const seedUseCases: UseCase[] = [
   },
   {
     id: "uc-md-claims-triage",
-    tenantId: "tnt-meridian",
+    tenantId: "cli-meridian",
     programId: "prg-md-claims",
     workstreamId: "wst-md-claims",
     name: "Claims triage acceleration",
@@ -156,7 +156,7 @@ export const seedUseCases: UseCase[] = [
 export const seedReleases: Release[] = [
   {
     id: "rel-nb-r1",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     programId: "prg-nb-foundation",
     version: "R1.0",
     name: "Foundation release 1",
@@ -166,7 +166,7 @@ export const seedReleases: Release[] = [
   },
   {
     id: "rel-nb-r2",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     programId: "prg-nb-foundation",
     version: "R2.0",
     name: "Foundation release 2",
@@ -176,7 +176,7 @@ export const seedReleases: Release[] = [
   },
   {
     id: "rel-md-r1",
-    tenantId: "tnt-meridian",
+    tenantId: "cli-meridian",
     programId: "prg-md-claims",
     version: "R1.0",
     name: "Claims foundation",
@@ -189,7 +189,7 @@ export const seedReleases: Release[] = [
 export const seedSuggestions: AiSuggestion[] = [
   {
     id: "sug-nb-001",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     targetRef: "program:prg-nb-foundation",
     stage: "discover",
     title: "Start with Party as the first canonical domain",
@@ -202,7 +202,7 @@ export const seedSuggestions: AiSuggestion[] = [
   },
   {
     id: "sug-nb-002",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     targetRef: "use-case:uc-nb-single-party",
     stage: "discover",
     title: "Use zero-copy access for lakehouse transaction history",
@@ -215,7 +215,7 @@ export const seedSuggestions: AiSuggestion[] = [
   },
   {
     id: "sug-md-001",
-    tenantId: "tnt-meridian",
+    tenantId: "cli-meridian",
     targetRef: "program:prg-md-claims",
     stage: "discover",
     title: "Sequence Policy before Claims",
@@ -231,7 +231,7 @@ export const seedSuggestions: AiSuggestion[] = [
 export const seedAudit: AuditEntry[] = [
   {
     id: "aud-nb-001",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     actor: "system",
     persona: "enterprise-architect",
     action: "entity.created",
@@ -241,7 +241,7 @@ export const seedAudit: AuditEntry[] = [
   },
   {
     id: "aud-nb-002",
-    tenantId: "tnt-northbank",
+    tenantId: "cli-northstar",
     actor: "system",
     persona: "data-steward",
     action: "entity.created",
@@ -251,7 +251,7 @@ export const seedAudit: AuditEntry[] = [
   },
   {
     id: "aud-md-001",
-    tenantId: "tnt-meridian",
+    tenantId: "cli-meridian",
     actor: "system",
     persona: "enterprise-architect",
     action: "entity.created",
