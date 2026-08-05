@@ -229,18 +229,19 @@ const insertAgentAggregate = async (agent: AgentDesignRecord, tenantId: string, 
       release: agent.release,
       origin: "seed",
       lifecycle_stage: agent.lifecycleStage,
-      overview: agent.overview,
-      instructions: agent.instructions,
-      consumption: agent.consumption,
-      tests: agent.testCases,
-      backlog: agent.backlog,
-      monitoring: agent.monitoring,
-      linked_risk_ids: agent.linkedRiskIds,
-      linked_decision_ids: agent.linkedDecisionIds,
+      overview: agent.overview as unknown as Json,
+      instructions: agent.instructions as unknown as Json,
+      consumption: agent.consumption as unknown as Json,
+      tests: agent.testCases as unknown as Json,
+      backlog: agent.backlog as unknown as Json,
+      monitoring: agent.monitoring as unknown as Json,
+      linked_risk_ids: [...agent.linkedRiskIds],
+      linked_decision_ids: [...agent.linkedDecisionIds],
       identity_policy_id: agent.identityPolicyId ?? null,
       created_by: actor.actor,
       updated_by: actor.actor,
     })
+
     .select("id")
     .single();
   if (error || !data) fail("agents insert", error);
