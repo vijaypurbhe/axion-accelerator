@@ -66,6 +66,7 @@ const TONE: Record<string, string> = {
 const AgentWorkbenchPage = () => {
   const { agentId } = useParams<{ agentId: string }>();
   const navigate = useNavigate();
+  const generateExport = useGenerateExport();
   const { toast } = useToast();
   const { data: agent, isLoading, isError, refetch } = useAgent(agentId);
   const readiness = useAgentReadiness(agent);
