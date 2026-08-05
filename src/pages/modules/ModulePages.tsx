@@ -76,20 +76,6 @@ export const IdentityPage = () => (
 );
 
 
-export const AgentforceStudioPage = () => (
-  <ModulePlaceholder
-    eyebrow="Design & Build"
-    title="Agentforce Studio"
-    description="Agent design, grounding, topics, actions and escalation policy."
-    capabilities={[
-      "Agent topic and action designer",
-      "Grounding coverage against data products",
-      "Escalation and human-in-the-loop policy",
-      "Agent evaluation and regression suites",
-    ]}
-  />
-);
-
 export const ValidationPage = () => (
   <ModulePlaceholder
     eyebrow="Assurance"

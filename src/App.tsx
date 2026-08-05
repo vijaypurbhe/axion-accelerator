@@ -27,10 +27,12 @@ import ConnectivityDecisionPage from "@/pages/connectivity/ConnectivityDecisionP
 import IdentityStudioPage from "@/pages/identity/IdentityStudioPage";
 import TrustCompliancePage from "@/pages/trust/TrustCompliancePage";
 import GovernanceRiskPage from "@/pages/governance/GovernanceRiskPage";
+import AgentPortfolioPage from "@/pages/agentforce/AgentPortfolioPage";
+import AgentWizardPage from "@/pages/agentforce/AgentWizardPage";
+import AgentWorkbenchPage from "@/pages/agentforce/AgentWorkbenchPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import {
   AdministrationPage,
-  AgentforceStudioPage,
   DeploymentPage,
   MonitoringPage,
   TemplatesPage,
@@ -71,7 +73,9 @@ const App = () => (
               <Route path="/identity" element={<IdentityStudioPage />} />
               <Route path="/trust-compliance" element={<TrustCompliancePage />} />
               <Route path="/governance-risk" element={<GovernanceRiskPage />} />
-              <Route path="/agentforce-studio" element={<AgentforceStudioPage />} />
+              <Route path="/agentforce-studio" element={<AgentPortfolioPage />} />
+              <Route path="/agentforce-studio/new" element={<AgentWizardPage />} />
+              <Route path="/agentforce-studio/:agentId" element={<AgentWorkbenchPage />} />
               <Route path="/validation" element={<ValidationPage />} />
               <Route path="/deployment" element={<DeploymentPage />} />
               <Route path="/monitoring" element={<MonitoringPage />} />
