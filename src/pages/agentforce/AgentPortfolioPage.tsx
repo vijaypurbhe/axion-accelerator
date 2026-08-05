@@ -151,10 +151,8 @@ const AgentPortfolioPage = () => {
         description="Select an agent to open the design workbench."
         actions={
           <FilterBar
-            search={search}
-            onSearchChange={setSearch}
-            searchPlaceholder="Search agents"
-            selects={[
+            search={{ value: search, onChange: setSearch, placeholder: "Search agents" }}
+            filters={[
               {
                 id: "status",
                 label: "Status",
@@ -176,7 +174,7 @@ const AgentPortfolioPage = () => {
           <EmptyState
             title="No agents yet"
             message="Create an agent from a BFSI pattern to start designing topics, actions and guardrails."
-            icon={Bot}
+            icon={<Bot className="h-5 w-5" aria-hidden />}
           />
         ) : (
           <DataTable
