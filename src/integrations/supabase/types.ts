@@ -417,8 +417,12 @@ export type Database = {
           created_at: string
           created_by: string
           id: string
+          identity_policy_id: string | null
           initiative_id: string
           instructions: Json
+          lifecycle_stage: string
+          linked_decision_ids: string[]
+          linked_risk_ids: string[]
           monitoring: Json
           origin: string
           overview: Json
@@ -428,6 +432,7 @@ export type Database = {
           risk_rating: string
           status: string
           tenant_id: string
+          test_status: string
           tests: Json
           updated_at: string
           updated_by: string
@@ -439,8 +444,12 @@ export type Database = {
           created_at?: string
           created_by?: string
           id?: string
+          identity_policy_id?: string | null
           initiative_id: string
           instructions?: Json
+          lifecycle_stage?: string
+          linked_decision_ids?: string[]
+          linked_risk_ids?: string[]
           monitoring?: Json
           origin?: string
           overview?: Json
@@ -450,6 +459,7 @@ export type Database = {
           risk_rating?: string
           status?: string
           tenant_id: string
+          test_status?: string
           tests?: Json
           updated_at?: string
           updated_by?: string
@@ -461,8 +471,12 @@ export type Database = {
           created_at?: string
           created_by?: string
           id?: string
+          identity_policy_id?: string | null
           initiative_id?: string
           instructions?: Json
+          lifecycle_stage?: string
+          linked_decision_ids?: string[]
+          linked_risk_ids?: string[]
           monitoring?: Json
           origin?: string
           overview?: Json
@@ -472,6 +486,7 @@ export type Database = {
           risk_rating?: string
           status?: string
           tenant_id?: string
+          test_status?: string
           tests?: Json
           updated_at?: string
           updated_by?: string
