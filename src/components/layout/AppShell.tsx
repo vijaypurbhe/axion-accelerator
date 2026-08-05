@@ -118,8 +118,17 @@ const NotificationBell = () => {
 
 const TopBar = () => {
   const navigate = useNavigate();
-  const { session, persona, activeClientId, activeInitiativeId, setActiveTenantId, setActiveInitiativeId, setPersona, signOut } =
-    useAxion();
+  const {
+    session,
+    persona,
+    roles,
+    activeClientId,
+    activeInitiativeId,
+    setActiveTenantId,
+    setActiveInitiativeId,
+    setPersona,
+    signOut,
+  } = useAxion();
   const { data: clients = [] } = useClients();
   const { data: initiatives = [] } = useInitiatives(activeClientId);
   const [search, setSearch] = useState("");
@@ -129,10 +138,18 @@ const TopBar = () => {
     [activeInitiativeId, initiatives],
   );
 
-  const handleSignOut = () => {
-    signOut();
+  /** Only roles actually granted on the server can be assumed. */
+  const availableRoles = useMemo(() => ROLES.filter((role) => roles.includes(role.id as RoleId)), [roles]);
+
+  useEffect(() => {
+    setAgentTenantContext(activeClientId);
+  }, [activeClientId]);
+
+  const handleSignOut = async () => {
+    await signOut();
     navigate("/login", { replace: true });
   };
+
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur">
