@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { seedAgents } from "@/data/agentforceSeed";
+import type { Json } from "@/integrations/supabase/types";
 import type { RoleId } from "@/domain/models";
 import type {
   AgentAction,
@@ -249,8 +250,8 @@ const insertAgentAggregate = async (agent: AgentDesignRecord, tenantId: string, 
 
   const childInsert = async (table: ChildTable, items: readonly { id: string }[]) => {
     if (items.length === 0) return;
-    const rows = items.map((item, index) => ({ agent_id: agentId, position: index, data: item }));
-    const { error: childError } = await supabase.from(table).insert(rows);
+    const rows = items.map((item, index) => ({ agent_id: agentId, position: index, data: item as unknown as Json }));
+    const { error: childError } = await supabase.from(table).insert(rows as never);
     if (childError) fail(table, childError);
   };
 
@@ -336,7 +337,7 @@ export const agentStore = {
       .eq("agent_id", agentId);
     const { data: inserted, error } = await supabase
       .from(table)
-      .insert({ agent_id: agentId, position: count ?? 0, data })
+      .insert({ agent_id: agentId, position: count ?? 0, data: data as Json } as never)
       .select("id")
       .single();
     if (error || !inserted) fail(`${table} insert`, error);
@@ -344,7 +345,7 @@ export const agentStore = {
   },
 
   async updateChild(table: ChildTable, id: string, data: object): Promise<void> {
-    const { error } = await supabase.from(table).update({ data }).eq("id", id);
+    const { error } = await supabase.from(table).update({ data: data as Json } as never).eq("id", id);
     if (error) fail(`${table} update`, error);
   },
 
@@ -472,7 +473,7 @@ export const agentStore = {
       agent_id: agentId,
       stage,
       requested_by: actor.actor,
-      required_roles: requiredRoles,
+      required_roles: [...requiredRoles],
       state: "open",
       due_by: dueBy ?? null,
     });
