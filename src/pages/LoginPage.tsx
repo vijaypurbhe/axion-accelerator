@@ -16,29 +16,40 @@ import { PERSONAS } from "@/domain/catalogs";
 import { config } from "@/config";
 import type { PersonaId } from "@/domain/types";
 
+type Mode = "sign-in" | "sign-up";
+
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { signIn } = useAxion();
+  const { signIn, signUp } = useAxion();
+  const [mode, setMode] = useState<Mode>("sign-in");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [persona, setPersona] = useState<PersonaId>("enterprise-architect");
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   const selectedPersona = useMemo(() => PERSONAS.find((p) => p.id === persona), [persona]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const normalized = email.trim().toLowerCase();
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(normalized)) {
-      setError("Enter a valid work email address.");
-      return;
-    }
-    if (!normalized.endsWith(`@${config.emailDomain}`)) {
-      setError(`Access is restricted to @${config.emailDomain} accounts.`);
-      return;
-    }
     setError(null);
-    signIn({ email: normalized, persona });
-    navigate("/portfolio", { replace: true });
+    setNotice(null);
+    setBusy(true);
+    try {
+      if (mode === "sign-up") {
+        await signUp({ email, password, persona });
+        setNotice("Account created. You can sign in now.");
+        setMode("sign-in");
+      } else {
+        await signIn({ email, password });
+        navigate("/portfolio", { replace: true });
+      }
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Sign-in failed.");
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -75,16 +86,24 @@ const LoginPage = () => {
         </div>
 
         <p className="text-xs text-muted-foreground">
-          {config.environmentLabel} environment · {config.dataMode === "mock" ? "Mock data adapter" : "Live data adapter"}
+          {config.environmentLabel} environment · Server-backed Agentforce Studio
         </p>
       </section>
 
       <section className="flex items-center justify-center px-6 py-12">
-        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6" noValidate>
-          <div className="space-y-1.5">
-            <h2 className="text-xl font-semibold tracking-tight text-foreground">Sign in to Axion</h2>
+        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
+          <div className="space-y-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
+              <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
+              Restricted to @{config.emailDomain}
+            </span>
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              {mode === "sign-in" ? "Sign in to Axion" : "Create your Axion account"}
+            </h2>
             <p className="text-sm text-muted-foreground">
-              Use your Tech Mahindra account and select the persona you are working as.
+              {mode === "sign-in"
+                ? "Use your work email and password."
+                : "Register with your work email, then sign in."}
             </p>
           </div>
 
@@ -94,47 +113,65 @@ const LoginPage = () => {
               id="email"
               type="email"
               autoComplete="email"
-              placeholder={`name@${config.emailDomain}`}
+              placeholder={`you@${config.emailDomain}`}
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              aria-invalid={Boolean(error)}
+              required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="persona">Persona</Label>
-            <Select value={persona} onValueChange={(value) => setPersona(value as PersonaId)}>
-              <SelectTrigger id="persona">
-                <SelectValue placeholder="Select persona" />
-              </SelectTrigger>
-              <SelectContent>
-                {PERSONAS.map((item) => (
-                  <SelectItem key={item.id} value={item.id}>
-                    {item.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {selectedPersona ? (
-              <p className="text-xs text-muted-foreground">{selectedPersona.summary}</p>
-            ) : null}
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              minLength={8}
+              required
+            />
           </div>
 
-          {error ? (
-            <p role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-              {error}
-            </p>
+          {mode === "sign-up" ? (
+            <div className="space-y-2">
+              <Label htmlFor="persona">Default persona</Label>
+              <Select value={persona} onValueChange={(value) => setPersona(value as PersonaId)}>
+                <SelectTrigger id="persona">
+                  <SelectValue placeholder="Select persona" />
+                </SelectTrigger>
+                <SelectContent>
+                  {PERSONAS.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedPersona ? (
+                <p className="text-xs text-muted-foreground">{selectedPersona.summary}</p>
+              ) : null}
+            </div>
           ) : null}
 
-          <Button type="submit" className="w-full">
-            Continue
+          {error ? <p className="text-sm text-destructive">{error}</p> : null}
+          {notice ? <p className="text-sm text-brand">{notice}</p> : null}
+
+          <Button type="submit" className="w-full" disabled={busy}>
+            {busy ? "Please wait…" : mode === "sign-in" ? "Sign in" : "Create account"}
           </Button>
 
-          <p className="flex items-start gap-2 text-xs text-muted-foreground">
-            <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-            Session and persona selection are stored locally for this accelerator. Enterprise SSO is a deferred
-            backend capability.
-          </p>
+          <button
+            type="button"
+            className="w-full text-center text-xs text-muted-foreground underline-offset-4 hover:underline"
+            onClick={() => {
+              setMode(mode === "sign-in" ? "sign-up" : "sign-in");
+              setError(null);
+              setNotice(null);
+            }}
+          >
+            {mode === "sign-in" ? "Need an account? Register" : "Already registered? Sign in"}
+          </button>
         </form>
       </section>
     </div>

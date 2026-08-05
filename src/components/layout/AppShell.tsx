@@ -1,5 +1,6 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { setAgentTenantContext } from "@/services/phase6";
 import { Bell, ChevronRight, HelpCircle, LogOut, Settings, UserCog } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -118,8 +119,17 @@ const NotificationBell = () => {
 
 const TopBar = () => {
   const navigate = useNavigate();
-  const { session, persona, activeClientId, activeInitiativeId, setActiveTenantId, setActiveInitiativeId, setPersona, signOut } =
-    useAxion();
+  const {
+    session,
+    persona,
+    roles,
+    activeClientId,
+    activeInitiativeId,
+    setActiveTenantId,
+    setActiveInitiativeId,
+    setPersona,
+    signOut,
+  } = useAxion();
   const { data: clients = [] } = useClients();
   const { data: initiatives = [] } = useInitiatives(activeClientId);
   const [search, setSearch] = useState("");
@@ -129,10 +139,18 @@ const TopBar = () => {
     [activeInitiativeId, initiatives],
   );
 
-  const handleSignOut = () => {
-    signOut();
+  /** Only roles actually granted on the server can be assumed. */
+  const availableRoles = useMemo(() => ROLES.filter((role) => roles.includes(role.id as RoleId)), [roles]);
+
+  useEffect(() => {
+    setAgentTenantContext(activeClientId);
+  }, [activeClientId]);
+
+  const handleSignOut = async () => {
+    await signOut();
     navigate("/login", { replace: true });
   };
+
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur">
@@ -207,9 +225,9 @@ const TopBar = () => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuLabel className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
-                <UserCog className="h-3.5 w-3.5" aria-hidden /> Demo role switcher
+                <UserCog className="h-3.5 w-3.5" aria-hidden /> Your roles
               </DropdownMenuLabel>
-              {ROLES.map((role) => (
+              {(availableRoles.length > 0 ? availableRoles : ROLES).map((role) => (
                 <DropdownMenuItem
                   key={role.id}
                   onClick={() => setPersona(role.id as RoleId)}

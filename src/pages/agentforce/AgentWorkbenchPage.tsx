@@ -52,7 +52,7 @@ import {
   type TraceabilityRow,
 } from "@/domain/phase6";
 import { patternById } from "@/data/agentforceSeed";
-import { agentSpecificationMarkdown, downloadTextFile, traceabilityCsv } from "@/services/phase6Exports";
+import { useGenerateExport } from "@/hooks/useAgentExports";
 import { currency, dateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -66,6 +66,7 @@ const TONE: Record<string, string> = {
 const AgentWorkbenchPage = () => {
   const { agentId } = useParams<{ agentId: string }>();
   const navigate = useNavigate();
+  const generateExport = useGenerateExport();
   const { toast } = useToast();
   const { data: agent, isLoading, isError, refetch } = useAgent(agentId);
   const readiness = useAgentReadiness(agent);
@@ -363,16 +364,16 @@ const AgentWorkbenchPage = () => {
             </Button>
             <Button
               variant="outline"
-              onClick={() =>
-                downloadTextFile(`${agent.reference}-design-spec.md`, agentSpecificationMarkdown(agent), "text/markdown")
-              }
+              disabled={generateExport.isPending}
+              onClick={() => generateExport.mutate({ agentId: agent.id, format: "markdown" })}
             >
               <FileText className="mr-2 h-4 w-4" />
               Design spec
             </Button>
             <Button
               variant="outline"
-              onClick={() => downloadTextFile(`${agent.reference}-traceability.csv`, traceabilityCsv(agent), "text/csv")}
+              disabled={generateExport.isPending}
+              onClick={() => generateExport.mutate({ agentId: agent.id, format: "csv" })}
             >
               <Download className="mr-2 h-4 w-4" />
               Traceability CSV
