@@ -619,7 +619,7 @@ const AgentWorkbenchPage = () => {
             title="Traceability matrix"
             description="Agent → topic → action → data product → source system → control."
           >
-            <DataTable columns={traceColumns} rows={traceability} rowKey={(r, ) => `${r.topic}-${r.action}-${r.dataProduct}`} emptyTitle="Nothing to trace" />
+            <DataTable columns={traceColumns} rows={traceability} rowKey={(r) => `${r.topic}-${r.action}-${r.dataProduct}`} emptyTitle="Nothing to trace" />
           </SectionCard>
         </TabsContent>
 
