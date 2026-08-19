@@ -102,12 +102,18 @@ const LoginPage = () => {
               Restricted to @{config.emailDomain}
             </span>
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-              {mode === "sign-in" ? "Sign in to Axion" : "Create your Axion account"}
+              {mode === "sign-in"
+                ? "Sign in to Axion"
+                : mode === "sign-up"
+                  ? "Create your Axion account"
+                  : "Reset your password"}
             </h2>
             <p className="text-sm text-muted-foreground">
               {mode === "sign-in"
                 ? "Use your work email and password."
-                : "Register with your work email, then sign in."}
+                : mode === "sign-up"
+                  ? "Register with your work email, then sign in."
+                  : "We'll email you a secure link to set a new password."}
             </p>
           </div>
 
@@ -124,18 +130,35 @@ const LoginPage = () => {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              minLength={8}
-              required
-            />
-          </div>
+          {mode !== "forgot" ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                {mode === "sign-in" ? (
+                  <button
+                    type="button"
+                    className="text-xs text-muted-foreground underline-offset-4 hover:underline"
+                    onClick={() => {
+                      setMode("forgot");
+                      setError(null);
+                      setNotice(null);
+                    }}
+                  >
+                    Forgot password?
+                  </button>
+                ) : null}
+              </div>
+              <Input
+                id="password"
+                type="password"
+                autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                minLength={8}
+                required
+              />
+            </div>
+          ) : null}
 
           {mode === "sign-up" ? (
             <div className="space-y-2">
@@ -162,7 +185,13 @@ const LoginPage = () => {
           {notice ? <p className="text-sm text-brand">{notice}</p> : null}
 
           <Button type="submit" className="w-full" disabled={busy}>
-            {busy ? "Please wait…" : mode === "sign-in" ? "Sign in" : "Create account"}
+            {busy
+              ? "Please wait…"
+              : mode === "sign-in"
+                ? "Sign in"
+                : mode === "sign-up"
+                  ? "Create account"
+                  : "Send reset link"}
           </Button>
 
           <div className="flex items-center gap-3">
@@ -205,6 +234,7 @@ const LoginPage = () => {
           >
             {mode === "sign-in" ? "Need an account? Register" : "Already registered? Sign in"}
           </button>
+
         </form>
       </section>
     </div>
