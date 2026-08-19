@@ -45,6 +45,8 @@ interface AxionContextValue {
   signIn: (input: { email: string; password: string }) => Promise<void>;
   signUp: (input: { email: string; password: string; persona: PersonaId }) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  requestPasswordReset: (email: string) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
   signOut: () => Promise<void>;
   setPersona: (persona: PersonaId) => void;
   setActiveTenantId: (tenantId: string) => void;
