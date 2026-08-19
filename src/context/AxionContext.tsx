@@ -16,11 +16,24 @@ const TENANT_KEY = "axion.tenantId";
 const INITIATIVE_KEY = "axion.initiativeId";
 const PERSONA_KEY = "axion.persona";
 
+/** One membership row: the role a user holds inside one client workspace. */
+export interface ClientMembership {
+  readonly clientId: string;
+  readonly role: PersonaId;
+  readonly isClientAdmin: boolean;
+}
+
 interface AxionContextValue {
   readonly session: Session | null;
   readonly userId: string | null;
-  /** Roles the signed-in user actually holds on the server. */
+  /** Roles the signed-in user holds on the server, scoped to the active client workspace. */
   readonly roles: readonly PersonaId[];
+  /** Every client workspace membership the signed-in user holds. */
+  readonly memberships: readonly ClientMembership[];
+  /** Client workspace ids the signed-in user may access. */
+  readonly accessibleClientIds: readonly string[];
+  /** True when the user administers the active client workspace. */
+  readonly isClientAdmin: boolean;
   /** False until the stored auth session has been resolved. */
   readonly authReady: boolean;
   readonly persona: PersonaId;
@@ -31,6 +44,7 @@ interface AxionContextValue {
   setActiveInitiativeId: (initiativeId: string | null) => void;
   signIn: (input: { email: string; password: string }) => Promise<void>;
   signUp: (input: { email: string; password: string; persona: PersonaId }) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   setPersona: (persona: PersonaId) => void;
   setActiveTenantId: (tenantId: string) => void;
@@ -81,22 +95,32 @@ export const assertAllowedEmail = (email: string) => {
 export const AxionProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-  const [roles, setRoles] = useState<readonly PersonaId[]>([]);
+  const [memberships, setMemberships] = useState<readonly ClientMembership[]>([]);
   const [authReady, setAuthReady] = useState(false);
   const [persona, setPersonaState] = useState<PersonaId>(() => readPersona());
   const [activeTenantId, setActiveTenantIdState] = useState<string>(() => readTenantId());
   const [activeInitiativeId, setActiveInitiativeIdState] = useState<string | null>(() => readInitiativeId());
 
-  /** Provision the profile + demo personas, then read back the granted roles. */
+  /** Provision the profile + demo workspace membership, then read back memberships. */
   const hydrate = useCallback(async (email: string, signedInAt: string, uid: string, defaultPersona?: PersonaId) => {
     const displayName = displayNameFromEmail(email);
     await supabase.rpc("ensure_axion_access", {
       _display_name: displayName,
       _persona: defaultPersona ?? readPersona(),
     });
-    const { data } = await supabase.from("axion_user_roles").select("role").eq("user_id", uid);
-    const granted = (data ?? []).map((row) => row.role).filter(isPersonaId);
-    setRoles(granted);
+    const { data } = await supabase
+      .from("client_members")
+      .select("client_id, role, is_client_admin")
+      .eq("user_id", uid)
+      .eq("status", "active");
+    const granted: ClientMembership[] = (data ?? [])
+      .filter((row) => isPersonaId(row.role))
+      .map((row) => ({
+        clientId: row.client_id,
+        role: row.role as PersonaId,
+        isClientAdmin: row.is_client_admin,
+      }));
+    setMemberships(granted);
     setUserId(uid);
     setSession({
       email,
@@ -108,27 +132,59 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const { data: subscription } = supabase.auth.onAuthStateChange((_event, authSession) => {
-      if (!authSession?.user?.email) {
+      const email = authSession?.user?.email;
+      if (!email) {
         setSession(null);
         setUserId(null);
-        setRoles([]);
+        setMemberships([]);
         return;
       }
-      const email = authSession.user.email;
-      const uid = authSession.user.id;
-      void hydrate(email, new Date().toISOString(), uid);
+      /** Social sign-in bypasses the login form, so the domain rule is enforced here too. */
+      if (!email.toLowerCase().endsWith(`@${config.emailDomain}`)) {
+        void supabase.auth.signOut();
+        setSession(null);
+        setUserId(null);
+        setMemberships([]);
+        return;
+      }
+      void hydrate(email, new Date().toISOString(), authSession.user.id);
     });
 
     void supabase.auth.getSession().then(async ({ data }) => {
       const authSession = data.session;
-      if (authSession?.user?.email) {
-        await hydrate(authSession.user.email, new Date().toISOString(), authSession.user.id);
+      const email = authSession?.user?.email;
+      if (email && email.toLowerCase().endsWith(`@${config.emailDomain}`)) {
+        await hydrate(email, new Date().toISOString(), authSession!.user.id);
       }
       setAuthReady(true);
     });
 
     return () => subscription.subscription.unsubscribe();
   }, [hydrate]);
+
+  const accessibleClientIds = useMemo(
+    () => Array.from(new Set(memberships.map((m) => m.clientId))),
+    [memberships],
+  );
+
+  const roles = useMemo<readonly PersonaId[]>(
+    () => Array.from(new Set(memberships.filter((m) => m.clientId === activeTenantId).map((m) => m.role))),
+    [memberships, activeTenantId],
+  );
+
+  const isClientAdmin = useMemo(
+    () => memberships.some((m) => m.clientId === activeTenantId && m.isClientAdmin),
+    [memberships, activeTenantId],
+  );
+
+  /** Never leave the app pointed at a workspace the user has no membership in. */
+  useEffect(() => {
+    if (accessibleClientIds.length === 0) return;
+    if (!accessibleClientIds.includes(activeTenantId)) {
+      setActiveTenantIdState(accessibleClientIds[0]);
+      setActiveInitiativeIdState(null);
+    }
+  }, [accessibleClientIds, activeTenantId]);
 
   useEffect(() => {
     window.localStorage.setItem(TENANT_KEY, activeTenantId);
@@ -164,11 +220,22 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
     [],
   );
 
+  const signInWithGoogle = useCallback(async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/`,
+        queryParams: { hd: config.emailDomain, prompt: "select_account" },
+      },
+    });
+    if (error) throw new Error(error.message);
+  }, []);
+
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
     setSession(null);
     setUserId(null);
-    setRoles([]);
+    setMemberships([]);
   }, []);
 
   const setPersona = useCallback((next: PersonaId) => {
@@ -192,6 +259,9 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
       session,
       userId,
       roles,
+      memberships,
+      accessibleClientIds,
+      isClientAdmin,
       authReady,
       persona: session?.persona ?? persona,
       activeTenantId,
@@ -200,6 +270,7 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
       setActiveInitiativeId,
       signIn,
       signUp,
+      signInWithGoogle,
       signOut,
       setPersona,
       setActiveTenantId,
@@ -209,6 +280,9 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
       session,
       userId,
       roles,
+      memberships,
+      accessibleClientIds,
+      isClientAdmin,
       authReady,
       persona,
       activeTenantId,
@@ -216,6 +290,7 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
       setActiveInitiativeId,
       signIn,
       signUp,
+      signInWithGoogle,
       signOut,
       setPersona,
       setActiveTenantId,

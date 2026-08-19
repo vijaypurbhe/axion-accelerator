@@ -16,11 +16,12 @@ const readEnv = (key: string): string | undefined => {
   return value && value.length > 0 ? value : undefined;
 };
 
-const mode = (readEnv("VITE_AXION_DATA_MODE") ?? "mock") as DataMode;
+/** Server-backed by default; set VITE_AXION_DATA_MODE=mock for offline demos and tests. */
+const mode = (readEnv("VITE_AXION_DATA_MODE") ?? "live") as DataMode;
 
 export const config: AxionConfig = {
   productName: "Tech Mahindra Axion",
-  dataMode: mode === "live" ? "live" : "mock",
+  dataMode: mode === "mock" ? "mock" : "live",
   environmentLabel: readEnv("VITE_AXION_ENVIRONMENT") ?? (import.meta.env.PROD ? "Production" : "Sandbox"),
   apiBaseUrl: readEnv("VITE_AXION_API_BASE_URL") ?? null,
   defaultTenantId: readEnv("VITE_AXION_DEFAULT_TENANT") ?? "cli-northstar",

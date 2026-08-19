@@ -123,6 +123,7 @@ const TopBar = () => {
     session,
     persona,
     roles,
+    accessibleClientIds,
     activeClientId,
     activeInitiativeId,
     setActiveTenantId,
@@ -130,16 +131,22 @@ const TopBar = () => {
     setPersona,
     signOut,
   } = useAxion();
-  const { data: clients = [] } = useClients();
+  const { data: allClients = [] } = useClients();
   const { data: initiatives = [] } = useInitiatives(activeClientId);
   const [search, setSearch] = useState("");
+
+  /** Only workspaces the signed-in user is a member of are selectable. */
+  const clients = useMemo(
+    () => allClients.filter((client) => accessibleClientIds.includes(client.id)),
+    [allClients, accessibleClientIds],
+  );
 
   const initiativeValue = useMemo(
     () => (activeInitiativeId && initiatives.some((i) => i.id === activeInitiativeId) ? activeInitiativeId : "none"),
     [activeInitiativeId, initiatives],
   );
 
-  /** Only roles actually granted on the server can be assumed. */
+  /** Only roles actually granted on the server for this workspace can be assumed. */
   const availableRoles = useMemo(() => ROLES.filter((role) => roles.includes(role.id as RoleId)), [roles]);
 
   useEffect(() => {
