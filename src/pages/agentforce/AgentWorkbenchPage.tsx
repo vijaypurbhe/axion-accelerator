@@ -571,7 +571,11 @@ const AgentWorkbenchPage = () => {
         </TabsContent>
 
         <TabsContent value="actions" className="mt-4">
-          <SectionCard title="Action catalog" description="Flows, Apex, queries, retrieval and external APIs with authorisation, validation and rollback.">
+          <SectionCard
+            title="Action catalog"
+            description="Flows, Apex, queries, retrieval and external APIs with authorisation, validation and rollback."
+            actions={addButton("action", "Add action")}
+          >
             <DataTable columns={actionColumns} rows={agent.actions} rowKey={(a) => a.id} emptyTitle="No actions defined" />
           </SectionCard>
         </TabsContent>
