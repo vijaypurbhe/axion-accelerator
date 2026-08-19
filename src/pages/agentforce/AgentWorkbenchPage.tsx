@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Download, FileText, GitBranch, Sparkles } from "lucide-react";
+import { ArrowLeft, Download, FileText, GitBranch, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -53,6 +53,11 @@ import {
 } from "@/domain/phase6";
 import { patternById } from "@/data/agentforceSeed";
 import { useGenerateExport } from "@/hooks/useAgentExports";
+import { useDeleteDesignObject, useSaveDesignObject } from "@/hooks/useAgentDesign";
+import { DesignObjectDrawer } from "@/components/agentforce/DesignObjectDrawer";
+import { ApprovalWorkflowPanel } from "@/components/agentforce/ApprovalWorkflowPanel";
+import { ConfirmDialog } from "@/components/enterprise/Overlays";
+import { emptyDesignObject, type DesignObjectKind } from "@/services/agentDesignSchemas";
 import { currency, dateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -81,8 +86,20 @@ const AgentWorkbenchPage = () => {
   const snapshot = useSnapshotAgentVersion();
   const review = useRecordAgentReview();
   const decide = useDecideAgentSuggestion();
+  const saveDesign = useSaveDesignObject();
+  const deleteDesign = useDeleteDesignObject();
 
   const [nextVersion, setNextVersion] = useState("");
+  const [editor, setEditor] = useState<{
+    kind: DesignObjectKind;
+    record: Record<string, unknown>;
+    isNew: boolean;
+  } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{
+    kind: DesignObjectKind;
+    objectId: string;
+    label: string;
+  } | null>(null);
 
   const decidedTitles = useMemo(() => new Set((decisions ?? []).map((d) => d.title)), [decisions]);
   const openSuggestions = useMemo(
@@ -95,6 +112,47 @@ const AgentWorkbenchPage = () => {
     return <ErrorState title="Agent not found" message="The agent design could not be loaded." onRetry={() => void refetch()} />;
 
   const o = agent.overview;
+
+  const openEditor = (kind: DesignObjectKind, record?: Record<string, unknown>) =>
+    setEditor({
+      kind,
+      record: record ?? (emptyDesignObject(kind) as unknown as Record<string, unknown>),
+      isNew: !record,
+    });
+
+  const addButton = (kind: DesignObjectKind, label: string) => (
+    <Button size="sm" variant="outline" onClick={() => openEditor(kind)}>
+      <Plus className="mr-2 h-4 w-4" />
+      {label}
+    </Button>
+  );
+
+  /** Shared row-level edit/remove controls for every inline-editable design object. */
+  const rowControls = <T extends { id: string }>(
+    kind: DesignObjectKind,
+    row: T,
+    label: string,
+  ) => (
+    <div className="flex justify-end gap-1">
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label={`Edit ${label}`}
+        onClick={() => openEditor(kind, row as unknown as Record<string, unknown>)}
+      >
+        <Pencil className="h-3.5 w-3.5" />
+      </Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label={`Remove ${label}`}
+        onClick={() => setPendingDelete({ kind, objectId: row.id, label })}
+      >
+        <Trash2 className="h-3.5 w-3.5 text-destructive" />
+      </Button>
+    </div>
+  );
+
 
   const topicColumns: DataTableColumn<AgentTopic>[] = [
     {
@@ -153,6 +211,7 @@ const AgentWorkbenchPage = () => {
       header: "Origin",
       render: (t) => (t.origin === "ai-suggested" ? <AiSuggestedBadge /> : <MetaPill>{t.origin}</MetaPill>),
     },
+    { key: "edit", header: "", align: "right", render: (t) => rowControls("topic", t, t.name) },
   ];
 
   const actionColumns: DataTableColumn<AgentAction>[] = [
@@ -219,6 +278,7 @@ const AgentWorkbenchPage = () => {
         </Badge>
       ),
     },
+    { key: "edit", header: "", align: "right", render: (a) => rowControls("action", a, a.name) },
   ];
 
   const groundingColumns: DataTableColumn<GroundingSource>[] = [
@@ -253,6 +313,7 @@ const AgentWorkbenchPage = () => {
       header: "Classification",
       render: (g) => <span className="text-xs capitalize">{g.dataClassification}</span>,
     },
+    { key: "edit", header: "", align: "right", render: (g) => rowControls("grounding", g, g.name) },
   ];
 
   const guardrailColumns: DataTableColumn<Guardrail>[] = [
@@ -279,6 +340,7 @@ const AgentWorkbenchPage = () => {
       header: "Reviewed",
       render: (g) => <span className="text-xs">{g.reviewed ? "Yes" : "Pending"}</span>,
     },
+    { key: "edit", header: "", align: "right", render: (g) => rowControls("guardrail", g, g.statement.slice(0, 60)) },
   ];
 
   const escalationColumns: DataTableColumn<EscalationRule>[] = [
@@ -405,6 +467,7 @@ const AgentWorkbenchPage = () => {
             ["consumption", "Consumption"],
             ["traceability", "Traceability"],
             ["suggestions", "AI suggestions"],
+            ["approvals", "Approvals & RACI"],
             ["governance", "Versions & approvals"],
           ].map(([value, label]) => (
             <TabsTrigger key={value} value={value}>
@@ -489,7 +552,11 @@ const AgentWorkbenchPage = () => {
         </TabsContent>
 
         <TabsContent value="topics" className="mt-4 space-y-4">
-          <SectionCard title="Topics and intents" description="Classification descriptions, utterances, permitted actions and escalation conditions.">
+          <SectionCard
+            title="Topics and intents"
+            description="Classification descriptions, utterances, permitted actions and escalation conditions."
+            actions={addButton("topic", "Add topic")}
+          >
             <DataTable columns={topicColumns} rows={agent.topics} rowKey={(t) => t.id} emptyTitle="No topics yet" />
           </SectionCard>
           <SectionCard title="Topic diagnostics" description="Overlap, duplication, conflict, coverage and traceability checks.">
@@ -509,13 +576,21 @@ const AgentWorkbenchPage = () => {
         </TabsContent>
 
         <TabsContent value="actions" className="mt-4">
-          <SectionCard title="Action catalog" description="Flows, Apex, queries, retrieval and external APIs with authorisation, validation and rollback.">
+          <SectionCard
+            title="Action catalog"
+            description="Flows, Apex, queries, retrieval and external APIs with authorisation, validation and rollback."
+            actions={addButton("action", "Add action")}
+          >
             <DataTable columns={actionColumns} rows={agent.actions} rowKey={(a) => a.id} emptyTitle="No actions defined" />
           </SectionCard>
         </TabsContent>
 
         <TabsContent value="grounding" className="mt-4">
-          <SectionCard title="Grounding and retrieval" description="Permitted fields, freshness, identity requirements and citation policy per source.">
+          <SectionCard
+            title="Grounding and retrieval"
+            description="Permitted fields, freshness, identity requirements and citation policy per source."
+            actions={addButton("grounding", "Add grounding source")}
+          >
             <DataTable columns={groundingColumns} rows={agent.grounding} rowKey={(g) => g.id} emptyTitle="No grounding sources" />
           </SectionCard>
         </TabsContent>
@@ -539,7 +614,11 @@ const AgentWorkbenchPage = () => {
         </TabsContent>
 
         <TabsContent value="guardrails" className="mt-4">
-          <SectionCard title="Guardrails" description="Each guardrail maps to the Trust Layer control library for evidencing at the risk gate.">
+          <SectionCard
+            title="Guardrails"
+            description="Each guardrail maps to the Trust Layer control library for evidencing at the risk gate."
+            actions={addButton("guardrail", "Add guardrail")}
+          >
             <DataTable columns={guardrailColumns} rows={agent.guardrails} rowKey={(g) => g.id} emptyTitle="No guardrails defined" />
           </SectionCard>
         </TabsContent>
@@ -823,8 +902,68 @@ const AgentWorkbenchPage = () => {
             </SectionCard>
           </div>
         </TabsContent>
+
+        <TabsContent value="approvals" className="mt-4">
+          <ApprovalWorkflowPanel agent={agent} readiness={readiness} />
+        </TabsContent>
       </Tabs>
+
+      {editor ? (
+        <DesignObjectDrawer
+          open
+          onOpenChange={(open) => {
+            if (!open) setEditor(null);
+          }}
+          kind={editor.kind}
+          record={editor.record}
+          isNew={editor.isNew}
+          saving={saveDesign.isPending}
+          onSave={(merged, label) =>
+            saveDesign.mutate(
+              {
+                agentId: agent.id,
+                kind: editor.kind,
+                objectId: editor.isNew ? undefined : String(editor.record.id ?? ""),
+                data: merged,
+                label,
+              },
+              {
+                onSuccess: () => {
+                  setEditor(null);
+                  toast({ title: "Design saved", description: `${label} — readiness recomputed.` });
+                },
+                onError: (error) =>
+                  toast({
+                    variant: "destructive",
+                    title: "Save failed",
+                    description: error instanceof Error ? error.message : "Unknown error.",
+                  }),
+              },
+            )
+          }
+        />
+      ) : null}
+
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        onOpenChange={(open) => {
+          if (!open) setPendingDelete(null);
+        }}
+        title="Remove design object?"
+        description={`"${pendingDelete?.label ?? ""}" will be removed from the agent design. Readiness, diagnostics and traceability recompute immediately, and the change is recorded in the audit trail.`}
+        confirmLabel="Remove"
+        destructive
+        onConfirm={() => {
+          if (!pendingDelete) return;
+          deleteDesign.mutate(
+            { agentId: agent.id, ...pendingDelete },
+            { onSuccess: () => toast({ title: "Design object removed", description: pendingDelete.label }) },
+          );
+          setPendingDelete(null);
+        }}
+      />
     </div>
+
   );
 };
 
