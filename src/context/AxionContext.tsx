@@ -45,6 +45,8 @@ interface AxionContextValue {
   signIn: (input: { email: string; password: string }) => Promise<void>;
   signUp: (input: { email: string; password: string; persona: PersonaId }) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  requestPasswordReset: (email: string) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
   signOut: () => Promise<void>;
   setPersona: (persona: PersonaId) => void;
   setActiveTenantId: (tenantId: string) => void;
@@ -220,6 +222,19 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
     [],
   );
 
+  const requestPasswordReset = useCallback(async (email: string) => {
+    const normalized = assertAllowedEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(normalized, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) throw new Error(error.message);
+  }, []);
+
+  const updatePassword = useCallback(async (password: string) => {
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) throw new Error(error.message);
+  }, []);
+
   const signInWithGoogle = useCallback(async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -230,6 +245,7 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
     });
     if (error) throw new Error(error.message);
   }, []);
+
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
@@ -271,6 +287,8 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
       signIn,
       signUp,
       signInWithGoogle,
+      requestPasswordReset,
+      updatePassword,
       signOut,
       setPersona,
       setActiveTenantId,
@@ -291,6 +309,8 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
       signIn,
       signUp,
       signInWithGoogle,
+      requestPasswordReset,
+      updatePassword,
       signOut,
       setPersona,
       setActiveTenantId,

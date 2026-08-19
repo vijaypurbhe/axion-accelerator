@@ -6,6 +6,7 @@ import { AxionProvider } from "@/context/AxionContext";
 import AppShell from "@/components/layout/AppShell";
 import RequireAuth from "@/components/layout/RequireAuth";
 import LoginPage from "@/pages/LoginPage";
+import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import PortfolioPage from "@/pages/PortfolioPage";
 import InitiativesPage from "@/pages/InitiativesPage";
 import InitiativeDashboardPage from "@/pages/InitiativeDashboardPage";
@@ -52,6 +53,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route
               element={
                 <RequireAuth>
