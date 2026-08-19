@@ -6,6 +6,7 @@ import { AxionProvider } from "@/context/AxionContext";
 import AppShell from "@/components/layout/AppShell";
 import RequireAuth from "@/components/layout/RequireAuth";
 import LoginPage from "@/pages/LoginPage";
+import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import PortfolioPage from "@/pages/PortfolioPage";
 import InitiativesPage from "@/pages/InitiativesPage";
 import InitiativeDashboardPage from "@/pages/InitiativeDashboardPage";
