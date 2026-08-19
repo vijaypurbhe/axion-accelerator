@@ -311,6 +311,7 @@ const AgentWorkbenchPage = () => {
       header: "Classification",
       render: (g) => <span className="text-xs capitalize">{g.dataClassification}</span>,
     },
+    { key: "edit", header: "", align: "right", render: (g) => rowControls("grounding", g, g.name) },
   ];
 
   const guardrailColumns: DataTableColumn<Guardrail>[] = [
