@@ -337,6 +337,7 @@ const AgentWorkbenchPage = () => {
       header: "Reviewed",
       render: (g) => <span className="text-xs">{g.reviewed ? "Yes" : "Pending"}</span>,
     },
+    { key: "edit", header: "", align: "right", render: (g) => rowControls("guardrail", g, g.statement.slice(0, 60)) },
   ];
 
   const escalationColumns: DataTableColumn<EscalationRule>[] = [
