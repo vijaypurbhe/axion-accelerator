@@ -86,8 +86,20 @@ const AgentWorkbenchPage = () => {
   const snapshot = useSnapshotAgentVersion();
   const review = useRecordAgentReview();
   const decide = useDecideAgentSuggestion();
+  const saveDesign = useSaveDesignObject();
+  const deleteDesign = useDeleteDesignObject();
 
   const [nextVersion, setNextVersion] = useState("");
+  const [editor, setEditor] = useState<{
+    kind: DesignObjectKind;
+    record: Record<string, unknown>;
+    isNew: boolean;
+  } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{
+    kind: DesignObjectKind;
+    objectId: string;
+    label: string;
+  } | null>(null);
 
   const decidedTitles = useMemo(() => new Set((decisions ?? []).map((d) => d.title)), [decisions]);
   const openSuggestions = useMemo(
@@ -100,6 +112,47 @@ const AgentWorkbenchPage = () => {
     return <ErrorState title="Agent not found" message="The agent design could not be loaded." onRetry={() => void refetch()} />;
 
   const o = agent.overview;
+
+  const openEditor = (kind: DesignObjectKind, record?: Record<string, unknown>) =>
+    setEditor({
+      kind,
+      record: record ?? (emptyDesignObject(kind) as unknown as Record<string, unknown>),
+      isNew: !record,
+    });
+
+  const addButton = (kind: DesignObjectKind, label: string) => (
+    <Button size="sm" variant="outline" onClick={() => openEditor(kind)}>
+      <Plus className="mr-2 h-4 w-4" />
+      {label}
+    </Button>
+  );
+
+  /** Shared row-level edit/remove controls for every inline-editable design object. */
+  const rowControls = <T extends { id: string }>(
+    kind: DesignObjectKind,
+    row: T,
+    label: string,
+  ) => (
+    <div className="flex justify-end gap-1">
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label={`Edit ${label}`}
+        onClick={() => openEditor(kind, row as unknown as Record<string, unknown>)}
+      >
+        <Pencil className="h-3.5 w-3.5" />
+      </Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label={`Remove ${label}`}
+        onClick={() => setPendingDelete({ kind, objectId: row.id, label })}
+      >
+        <Trash2 className="h-3.5 w-3.5 text-destructive" />
+      </Button>
+    </div>
+  );
+
 
   const topicColumns: DataTableColumn<AgentTopic>[] = [
     {
