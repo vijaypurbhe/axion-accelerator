@@ -885,8 +885,68 @@ const AgentWorkbenchPage = () => {
             </SectionCard>
           </div>
         </TabsContent>
+
+        <TabsContent value="approvals" className="mt-4">
+          <ApprovalWorkflowPanel agent={agent} readiness={readiness} />
+        </TabsContent>
       </Tabs>
+
+      {editor ? (
+        <DesignObjectDrawer
+          open
+          onOpenChange={(open) => {
+            if (!open) setEditor(null);
+          }}
+          kind={editor.kind}
+          record={editor.record}
+          isNew={editor.isNew}
+          saving={saveDesign.isPending}
+          onSave={(merged, label) =>
+            saveDesign.mutate(
+              {
+                agentId: agent.id,
+                kind: editor.kind,
+                objectId: editor.isNew ? undefined : String(editor.record.id ?? ""),
+                data: merged,
+                label,
+              },
+              {
+                onSuccess: () => {
+                  setEditor(null);
+                  toast({ title: "Design saved", description: `${label} — readiness recomputed.` });
+                },
+                onError: (error) =>
+                  toast({
+                    variant: "destructive",
+                    title: "Save failed",
+                    description: error instanceof Error ? error.message : "Unknown error.",
+                  }),
+              },
+            )
+          }
+        />
+      ) : null}
+
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        onOpenChange={(open) => {
+          if (!open) setPendingDelete(null);
+        }}
+        title="Remove design object?"
+        description={`"${pendingDelete?.label ?? ""}" will be removed from the agent design. Readiness, diagnostics and traceability recompute immediately, and the change is recorded in the audit trail.`}
+        confirmLabel="Remove"
+        destructive
+        onConfirm={() => {
+          if (!pendingDelete) return;
+          deleteDesign.mutate(
+            { agentId: agent.id, ...pendingDelete },
+            { onSuccess: () => toast({ title: "Design object removed", description: pendingDelete.label }) },
+          );
+          setPendingDelete(null);
+        }}
+      />
     </div>
+
   );
 };
 
