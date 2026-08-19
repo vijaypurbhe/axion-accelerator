@@ -23,6 +23,7 @@ import DataProductDetailPage from "@/pages/dataproducts/DataProductDetailPage";
 import DataProductBuilderPage from "@/pages/dataproducts/DataProductBuilderPage";
 import SourceCatalogPage from "@/pages/dataproducts/SourceCatalogPage";
 import MappingWorkbenchPage from "@/pages/dataproducts/MappingWorkbenchPage";
+import MetadataImportWizardPage from "@/pages/dataproducts/MetadataImportWizardPage";
 import ConnectivityDecisionPage from "@/pages/connectivity/ConnectivityDecisionPage";
 import IdentityStudioPage from "@/pages/identity/IdentityStudioPage";
 import TrustCompliancePage from "@/pages/trust/TrustCompliancePage";
@@ -68,6 +69,7 @@ const App = () => (
               <Route path="/data-products/new" element={<DataProductBuilderPage />} />
               <Route path="/data-products/:productId" element={<DataProductDetailPage />} />
               <Route path="/sources" element={<SourceCatalogPage />} />
+              <Route path="/metadata-import" element={<MetadataImportWizardPage />} />
               <Route path="/mapping" element={<MappingWorkbenchPage />} />
               <Route path="/connectivity" element={<ConnectivityDecisionPage />} />
               <Route path="/identity" element={<IdentityStudioPage />} />
