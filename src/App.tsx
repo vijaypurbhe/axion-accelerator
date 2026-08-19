@@ -69,6 +69,7 @@ const App = () => (
               <Route path="/data-products/new" element={<DataProductBuilderPage />} />
               <Route path="/data-products/:productId" element={<DataProductDetailPage />} />
               <Route path="/sources" element={<SourceCatalogPage />} />
+              <Route path="/metadata-import" element={<MetadataImportWizardPage />} />
               <Route path="/mapping" element={<MappingWorkbenchPage />} />
               <Route path="/connectivity" element={<ConnectivityDecisionPage />} />
               <Route path="/identity" element={<IdentityStudioPage />} />
