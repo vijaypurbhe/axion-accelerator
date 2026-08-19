@@ -277,6 +277,7 @@ const AgentWorkbenchPage = () => {
         </Badge>
       ),
     },
+    { key: "edit", header: "", align: "right", render: (a) => rowControls("action", a, a.name) },
   ];
 
   const groundingColumns: DataTableColumn<GroundingSource>[] = [
