@@ -601,7 +601,11 @@ const AgentWorkbenchPage = () => {
         </TabsContent>
 
         <TabsContent value="guardrails" className="mt-4">
-          <SectionCard title="Guardrails" description="Each guardrail maps to the Trust Layer control library for evidencing at the risk gate.">
+          <SectionCard
+            title="Guardrails"
+            description="Each guardrail maps to the Trust Layer control library for evidencing at the risk gate."
+            actions={addButton("guardrail", "Add guardrail")}
+          >
             <DataTable columns={guardrailColumns} rows={agent.guardrails} rowKey={(g) => g.id} emptyTitle="No guardrails defined" />
           </SectionCard>
         </TabsContent>
