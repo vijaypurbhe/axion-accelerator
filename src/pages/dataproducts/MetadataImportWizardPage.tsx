@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { PageHeader, SectionCard, StatTile } from "@/components/enterprise/Layout";
 import { DataTable, type DataTableColumn } from "@/components/enterprise/DataTable";
 import { MetaPill } from "@/components/enterprise/Badges";
-import { StageStepper } from "@/components/enterprise/StageStepper";
+
 import { useToast } from "@/hooks/use-toast";
 import { useAxion } from "@/context/AxionContext";
 import { useActor } from "@/hooks/useWorkspace";
