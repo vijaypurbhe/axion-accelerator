@@ -180,8 +180,8 @@ const seededClients = new Set<string>();
 
 /**
  * Demo workspaces open with the BFSI walkthrough content. Seeding runs once per
- * client workspace and is idempotent: a marker record is written first, so a
- * second browser or tab does not duplicate rows.
+ * client workspace: a completion marker is written only after the content lands,
+ * and every write ignores duplicates so parallel tabs cannot create doubles.
  */
 const ensureSeeded = async (clientId: string): Promise<void> => {
   if (seededClients.has(clientId)) return;
@@ -194,16 +194,8 @@ const ensureSeeded = async (clientId: string): Promise<void> => {
     .maybeSingle();
   if (marker) return;
 
-  const { error: markerError } = await supabase.from("workspace_records").insert({
-    id: `seed-marker-${clientId}`,
-    client_id: clientId,
-    kind: "seed_marker",
-    data: { seededAt: now() } as unknown as Json,
-    is_seed: true,
-  });
-  if (markerError) return; /* another session seeded first */
-
   const byClient = <T extends { tenantId: string }>(rows: readonly T[]) =>
+
     rows.filter((row) => row.tenantId === clientId);
   const initiativesForClient = seedInitiatives.filter((i) => i.clientId === clientId);
   const initiativeIds = new Set(initiativesForClient.map((i) => i.id));
@@ -247,10 +239,16 @@ const ensureSeeded = async (clientId: string): Promise<void> => {
   push("decision", forInitiatives(seedDecisions), initiativeKey as never);
   push("agent_design", forInitiatives(seedAgentDesigns), initiativeKey as never);
   push("notification", byClient(seedNotifications));
-  push("template", seedTemplates);
+  /** Templates are catalog content shared by every workspace, so they are not client-seeded. */
 
   if (payload.length > 0) {
-    await supabase.from("workspace_records").insert(payload);
+    const { error } = await supabase
+      .from("workspace_records")
+      .upsert(payload, { onConflict: "id", ignoreDuplicates: true });
+    if (error) {
+      seededClients.delete(clientId);
+      return;
+    }
   }
 
   const activityRows = byClient(seedActivity).map((entry) => ({
@@ -268,6 +266,18 @@ const ensureSeeded = async (clientId: string): Promise<void> => {
   if (activityRows.length > 0) {
     await supabase.from("activity_log").insert(activityRows);
   }
+
+  /** Marker last: its presence means the workspace content landed in full. */
+  await supabase.from("workspace_records").upsert(
+    {
+      id: `seed-marker-${clientId}`,
+      client_id: clientId,
+      kind: "seed_marker",
+      data: { seededAt: now() } as unknown as Json,
+      is_seed: true,
+    },
+    { onConflict: "id", ignoreDuplicates: true },
+  );
 };
 
 /* ------------------------------- audit trail ------------------------------- */

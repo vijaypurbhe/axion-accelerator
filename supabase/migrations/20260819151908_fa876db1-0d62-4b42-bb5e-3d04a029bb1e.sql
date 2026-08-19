@@ -1,0 +1,1 @@
+DELETE FROM public.workspace_records WHERE kind = 'seed_marker';
