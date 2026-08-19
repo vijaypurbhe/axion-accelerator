@@ -467,6 +467,7 @@ const AgentWorkbenchPage = () => {
             ["consumption", "Consumption"],
             ["traceability", "Traceability"],
             ["suggestions", "AI suggestions"],
+            ["approvals", "Approvals & RACI"],
             ["governance", "Versions & approvals"],
           ].map(([value, label]) => (
             <TabsTrigger key={value} value={value}>
