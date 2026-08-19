@@ -211,6 +211,7 @@ const AgentWorkbenchPage = () => {
       header: "Origin",
       render: (t) => (t.origin === "ai-suggested" ? <AiSuggestedBadge /> : <MetaPill>{t.origin}</MetaPill>),
     },
+    { key: "edit", header: "", align: "right", render: (t) => rowControls("topic", t, t.name) },
   ];
 
   const actionColumns: DataTableColumn<AgentAction>[] = [
