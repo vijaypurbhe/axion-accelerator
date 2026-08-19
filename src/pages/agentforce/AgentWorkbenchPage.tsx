@@ -551,7 +551,11 @@ const AgentWorkbenchPage = () => {
         </TabsContent>
 
         <TabsContent value="topics" className="mt-4 space-y-4">
-          <SectionCard title="Topics and intents" description="Classification descriptions, utterances, permitted actions and escalation conditions.">
+          <SectionCard
+            title="Topics and intents"
+            description="Classification descriptions, utterances, permitted actions and escalation conditions."
+            actions={addButton("topic", "Add topic")}
+          >
             <DataTable columns={topicColumns} rows={agent.topics} rowKey={(t) => t.id} emptyTitle="No topics yet" />
           </SectionCard>
           <SectionCard title="Topic diagnostics" description="Overlap, duplication, conflict, coverage and traceability checks.">
