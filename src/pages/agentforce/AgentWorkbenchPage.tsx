@@ -577,7 +577,11 @@ const AgentWorkbenchPage = () => {
         </TabsContent>
 
         <TabsContent value="grounding" className="mt-4">
-          <SectionCard title="Grounding and retrieval" description="Permitted fields, freshness, identity requirements and citation policy per source.">
+          <SectionCard
+            title="Grounding and retrieval"
+            description="Permitted fields, freshness, identity requirements and citation policy per source."
+            actions={addButton("grounding", "Add grounding source")}
+          >
             <DataTable columns={groundingColumns} rows={agent.grounding} rowKey={(g) => g.id} emptyTitle="No grounding sources" />
           </SectionCard>
         </TabsContent>
