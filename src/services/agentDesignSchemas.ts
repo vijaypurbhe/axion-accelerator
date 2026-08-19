@@ -121,7 +121,7 @@ export const designSchemas = {
 
 /** Blank records used when adding a new design object. */
 export const emptyDesignObject = (kind: DesignObjectKind) => {
-  const shared = { origin: "human-authored" as const };
+  const shared = { origin: "manual" as const };
   if (kind === "topic")
     return {
       ...shared,
