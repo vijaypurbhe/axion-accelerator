@@ -23,6 +23,7 @@ import DataProductDetailPage from "@/pages/dataproducts/DataProductDetailPage";
 import DataProductBuilderPage from "@/pages/dataproducts/DataProductBuilderPage";
 import SourceCatalogPage from "@/pages/dataproducts/SourceCatalogPage";
 import MappingWorkbenchPage from "@/pages/dataproducts/MappingWorkbenchPage";
+import MetadataImportWizardPage from "@/pages/dataproducts/MetadataImportWizardPage";
 import ConnectivityDecisionPage from "@/pages/connectivity/ConnectivityDecisionPage";
 import IdentityStudioPage from "@/pages/identity/IdentityStudioPage";
 import TrustCompliancePage from "@/pages/trust/TrustCompliancePage";
