@@ -53,6 +53,11 @@ import {
 } from "@/domain/phase6";
 import { patternById } from "@/data/agentforceSeed";
 import { useGenerateExport } from "@/hooks/useAgentExports";
+import { useDeleteDesignObject, useSaveDesignObject } from "@/hooks/useAgentDesign";
+import { DesignObjectDrawer } from "@/components/agentforce/DesignObjectDrawer";
+import { ApprovalWorkflowPanel } from "@/components/agentforce/ApprovalWorkflowPanel";
+import { ConfirmDialog } from "@/components/enterprise/Overlays";
+import { emptyDesignObject, type DesignObjectKind } from "@/services/agentDesignSchemas";
 import { currency, dateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
