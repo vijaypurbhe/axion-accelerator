@@ -212,14 +212,32 @@ const MetadataImportWizardPage = () => {
         }
       />
 
-      <StageStepper
-        steps={STEPS.map((entry, index) => ({
-          id: entry.id,
-          label: entry.label,
-          description: entry.description,
-          state: index < stepIndex ? "complete" : index === stepIndex ? "current" : "upcoming",
-        }))}
-      />
+      <ol className="grid gap-3 rounded-xl border border-border bg-surface p-4 md:grid-cols-4">
+        {STEPS.map((entry, index) => {
+          const state = index < stepIndex ? "complete" : index === stepIndex ? "current" : "upcoming";
+          return (
+            <li key={entry.id} className="flex items-start gap-3">
+              <span
+                className={cn(
+                  "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
+                  state === "complete" && "border-success bg-success/10 text-success",
+                  state === "current" && "border-brand bg-brand text-brand-foreground",
+                  state === "upcoming" && "border-border text-muted-foreground",
+                )}
+              >
+                {state === "complete" ? <CheckCircle2 className="h-4 w-4" aria-hidden /> : index + 1}
+              </span>
+              <div className="space-y-0.5">
+                <p className={cn("text-sm font-semibold", state === "upcoming" ? "text-muted-foreground" : "text-foreground")}>
+                  {entry.label}
+                </p>
+                <p className="text-xs text-muted-foreground">{entry.description}</p>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+
 
       {step === "connect" ? (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,320px)_1fr]">
