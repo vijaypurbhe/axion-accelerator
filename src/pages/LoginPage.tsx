@@ -16,11 +16,11 @@ import { PERSONAS } from "@/domain/catalogs";
 import { config } from "@/config";
 import type { PersonaId } from "@/domain/types";
 
-type Mode = "sign-in" | "sign-up";
+type Mode = "sign-in" | "sign-up" | "forgot";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { signIn, signUp, signInWithGoogle } = useAxion();
+  const { signIn, signUp, signInWithGoogle, requestPasswordReset } = useAxion();
   const [mode, setMode] = useState<Mode>("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,7 +37,10 @@ const LoginPage = () => {
     setNotice(null);
     setBusy(true);
     try {
-      if (mode === "sign-up") {
+      if (mode === "forgot") {
+        await requestPasswordReset(email);
+        setNotice("Reset link sent. Check your inbox and follow the link to set a new password.");
+      } else if (mode === "sign-up") {
         await signUp({ email, password, persona });
         setNotice("Account created. You can sign in now.");
         setMode("sign-in");
@@ -51,6 +54,7 @@ const LoginPage = () => {
       setBusy(false);
     }
   };
+
 
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[1.1fr_1fr]">
