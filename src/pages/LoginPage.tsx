@@ -20,7 +20,7 @@ type Mode = "sign-in" | "sign-up";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { signIn, signUp } = useAxion();
+  const { signIn, signUp, signInWithGoogle } = useAxion();
   const [mode, setMode] = useState<Mode>("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -160,6 +160,35 @@ const LoginPage = () => {
           <Button type="submit" className="w-full" disabled={busy}>
             {busy ? "Please wait…" : mode === "sign-in" ? "Sign in" : "Create account"}
           </Button>
+
+          <div className="flex items-center gap-3">
+            <span className="h-px flex-1 bg-border" />
+            <span className="text-xs uppercase tracking-wider text-muted-foreground">or</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            disabled={busy}
+            onClick={async () => {
+              setError(null);
+              setNotice(null);
+              setBusy(true);
+              try {
+                await signInWithGoogle();
+              } catch (cause) {
+                setError(cause instanceof Error ? cause.message : "Google sign-in failed.");
+                setBusy(false);
+              }
+            }}
+          >
+            Continue with Google
+          </Button>
+          <p className="text-center text-xs text-muted-foreground">
+            Only @{config.emailDomain} accounts are permitted, whichever method you use.
+          </p>
 
           <button
             type="button"

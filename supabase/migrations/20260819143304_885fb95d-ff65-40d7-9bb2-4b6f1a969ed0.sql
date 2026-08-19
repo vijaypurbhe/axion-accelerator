@@ -1,0 +1,10 @@
+REVOKE EXECUTE ON FUNCTION public.has_client_access(text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.has_client_role(text, public.axion_role) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.is_client_admin(text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.has_agent_access(uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.ensure_axion_access(text, text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.ensure_login_report_admin() FROM anon;
+REVOKE EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.has_axion_role(uuid, public.axion_role) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.is_techmahindra_user() FROM anon;
+REVOKE EXECUTE ON FUNCTION public.current_user_email() FROM anon;

@@ -559,6 +559,89 @@ export type Database = {
         }
         Relationships: []
       }
+      client_members: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          invited_by: string
+          is_client_admin: boolean
+          role: Database["public"]["Enums"]["axion_role"]
+          status: string
+          user_id: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          invited_by?: string
+          is_client_admin?: boolean
+          role: Database["public"]["Enums"]["axion_role"]
+          status?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          invited_by?: string
+          is_client_admin?: boolean
+          role?: Database["public"]["Enums"]["axion_role"]
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_members_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          branding_accent: string
+          created_at: string
+          created_by: string
+          description: string
+          geography: string
+          id: string
+          industry: string
+          is_demo: boolean
+          name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          branding_accent?: string
+          created_at?: string
+          created_by?: string
+          description?: string
+          geography?: string
+          id: string
+          industry?: string
+          is_demo?: boolean
+          name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          branding_accent?: string
+          created_at?: string
+          created_by?: string
+          description?: string
+          geography?: string
+          id?: string
+          industry?: string
+          is_demo?: boolean
+          name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       export_jobs: {
         Row: {
           agent_id: string
@@ -690,6 +773,53 @@ export type Database = {
         }
         Relationships: []
       }
+      workspace_records: {
+        Row: {
+          client_id: string
+          created_at: string
+          created_by: string
+          data: Json
+          id: string
+          initiative_id: string | null
+          is_seed: boolean
+          kind: string
+          updated_at: string
+          updated_by: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          created_by?: string
+          data?: Json
+          id: string
+          initiative_id?: string | null
+          is_seed?: boolean
+          kind: string
+          updated_at?: string
+          updated_by?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          created_by?: string
+          data?: Json
+          id?: string
+          initiative_id?: string | null
+          is_seed?: boolean
+          kind?: string
+          updated_at?: string
+          updated_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspace_records_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -701,10 +831,19 @@ export type Database = {
         Returns: boolean
       }
       ensure_login_report_admin: { Args: never; Returns: boolean }
+      has_agent_access: { Args: { _agent_id: string }; Returns: boolean }
       has_axion_role: {
         Args: {
           _role: Database["public"]["Enums"]["axion_role"]
           _user_id: string
+        }
+        Returns: boolean
+      }
+      has_client_access: { Args: { _client_id: string }; Returns: boolean }
+      has_client_role: {
+        Args: {
+          _client_id: string
+          _role: Database["public"]["Enums"]["axion_role"]
         }
         Returns: boolean
       }
@@ -715,6 +854,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_client_admin: { Args: { _client_id: string }; Returns: boolean }
       is_techmahindra_user: { Args: never; Returns: boolean }
     }
     Enums: {
