@@ -220,6 +220,19 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
     [],
   );
 
+  const requestPasswordReset = useCallback(async (email: string) => {
+    const normalized = assertAllowedEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(normalized, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) throw new Error(error.message);
+  }, []);
+
+  const updatePassword = useCallback(async (password: string) => {
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) throw new Error(error.message);
+  }, []);
+
   const signInWithGoogle = useCallback(async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -230,6 +243,7 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
     });
     if (error) throw new Error(error.message);
   }, []);
+
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
