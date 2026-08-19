@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Library,
   Network,
+  PlugZap,
   Rocket,
   ScrollText,
   Settings,
