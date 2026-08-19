@@ -309,6 +309,8 @@ export const AxionProvider = ({ children }: { children: ReactNode }) => {
       signIn,
       signUp,
       signInWithGoogle,
+      requestPasswordReset,
+      updatePassword,
       signOut,
       setPersona,
       setActiveTenantId,
