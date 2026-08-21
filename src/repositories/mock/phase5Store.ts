@@ -1,6 +1,6 @@
 import { CLIENT_NORTHSTAR, INITIATIVE_C360 } from "@/data/bfsiSeed";
 import { seedApplicabilityProfile, seedGovernanceBodies, seedRaci, seedRisks } from "@/data/governanceSeed";
-import { CONTROL_LIBRARY, controlById } from "@/data/trustControlLibrary";
+import { APPLICABILITY_FACTORS, CONTROL_LIBRARY, controlById } from "@/data/trustControlLibrary";
 import { evaluateApplicability } from "@/services/trustEngine";
 import type { RoleId } from "@/domain/models";
 import type {
