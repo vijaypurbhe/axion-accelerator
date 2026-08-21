@@ -57,24 +57,88 @@ const LoginPage = () => {
   };
 
 
+  const lifecycle = [
+    "Discover",
+    "Assess",
+    "Design",
+    "Configure",
+    "Validate",
+    "Approve",
+    "Deploy",
+    "Monitor",
+    "Improve",
+  ];
+
   return (
-    <div className="grid min-h-screen w-full lg:grid-cols-[1.1fr_1fr]">
-      <section className="hidden flex-col justify-between border-r border-border bg-surface px-12 py-12 lg:flex">
-        <div className="flex items-center">
-          <img src={axionLogo.url} alt="Axion Data Accelerator by Tech Mahindra" className="h-11 w-auto" />
+    <div className="grid min-h-screen w-full lg:grid-cols-[1.15fr_1fr]">
+      <section className="relative hidden flex-col justify-between overflow-hidden border-r border-border bg-surface px-12 py-12 lg:flex">
+        {/* decorative background */}
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute -bottom-32 right-0 h-[28rem] w-[28rem] rounded-full bg-brand-blue/10 blur-3xl" />
+          <div
+            className="absolute inset-0 opacity-[0.35]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)",
+              backgroundSize: "56px 56px",
+              maskImage: "radial-gradient(ellipse at 30% 30%, black, transparent 75%)",
+              WebkitMaskImage: "radial-gradient(ellipse at 30% 30%, black, transparent 75%)",
+            }}
+          />
         </div>
 
-        <div className="max-w-xl space-y-5">
-          <h1 className="text-4xl font-semibold leading-tight tracking-tight text-foreground">
-            A trusted, governed, agent-ready data foundation.
+        <div className="relative flex items-center">
+          <img
+            src={axionLogo.url}
+            alt="Axion Data Accelerator by Tech Mahindra"
+            className="h-24 w-auto drop-shadow-sm"
+          />
+        </div>
+
+        <div className="relative max-w-xl space-y-6">
+          <h1 className="text-[2.75rem] font-semibold leading-[1.08] tracking-tight text-foreground">
+            A trusted, governed,{" "}
+            <span className="bg-gradient-to-r from-primary to-brand-blue bg-clip-text text-transparent">
+              agent-ready
+            </span>{" "}
+            data foundation.
           </h1>
           <p className="text-base leading-relaxed text-muted-foreground">
             Axion combines advisory readiness assessment, an architecture and configuration workbench, and a
             deployment accelerator for Salesforce Data 360 and Agentforce — starting with BFSI.
           </p>
+
+          <div className="flex flex-wrap gap-1.5">
+            {lifecycle.map((step, index) => (
+              <span
+                key={step}
+                className="rounded-full border border-border bg-background/70 px-2.5 py-1 text-[11px] font-medium text-muted-foreground backdrop-blur"
+              >
+                <span className="mr-1 text-primary">{index + 1}</span>
+                {step}
+              </span>
+            ))}
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              { value: "30+", label: "BFSI canonical data products" },
+              { value: "24", label: "Trust layer controls" },
+              { value: "10", label: "Source platform connectors" },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-xl border border-border bg-background/70 p-4 backdrop-blur"
+              >
+                <p className="text-2xl font-semibold tracking-tight text-foreground">{stat.value}</p>
+                <p className="mt-1 text-xs leading-snug text-muted-foreground">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+
           <ul className="grid gap-2 text-sm text-muted-foreground">
             {[
-              "Discover → Assess → Design → Configure → Validate → Approve → Deploy → Monitor → Improve",
               "Data product blueprinting, canonical modeling and source-to-target mapping",
               "Identity resolution, unified profiles, activation and Agentforce trust controls",
               "Every AI recommendation is reviewed, decided and audited",
@@ -87,7 +151,7 @@ const LoginPage = () => {
           </ul>
         </div>
 
-        <p className="text-xs text-muted-foreground">
+        <p className="relative text-xs text-muted-foreground">
           {config.environmentLabel} environment · Server-backed Agentforce Studio
         </p>
       </section>
@@ -95,10 +159,12 @@ const LoginPage = () => {
       <section className="flex items-center justify-center px-6 py-12">
         <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
           <div className="space-y-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
-              <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
-              Restricted to @{config.emailDomain}
-            </span>
+            <img
+              src={axionLogo.url}
+              alt="Axion Data Accelerator by Tech Mahindra"
+              className="mb-4 h-14 w-auto lg:hidden"
+            />
+
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">
               {mode === "sign-in"
                 ? "Sign in to Axion"
