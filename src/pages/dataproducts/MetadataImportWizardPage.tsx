@@ -295,6 +295,13 @@ const MetadataImportWizardPage = () => {
             {missingCredentials.length > 0 ? (
               <p className="mt-3 text-xs text-muted-foreground">Required: {missingCredentials.join(", ")}.</p>
             ) : null}
+            {!isSimulation ? (
+              <p className="mt-3 text-xs text-muted-foreground">
+                Live connector reads are not enabled in this workspace yet. Sample metadata for each platform is
+                available inside a simulation / training workspace.
+              </p>
+            ) : null}
+
           </SectionCard>
         </div>
       ) : null}
