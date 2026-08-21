@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShieldCheck } from "lucide-react";
 import axionLogo from "@/assets/axion-logo.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,7 +74,7 @@ const LoginPage = () => {
         {/* decorative background */}
         <div aria-hidden className="pointer-events-none absolute inset-0">
           <div className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute -bottom-32 right-0 h-[28rem] w-[28rem] rounded-full bg-brand-blue/10 blur-3xl" />
+          <div className="absolute -bottom-32 right-0 h-[28rem] w-[28rem] rounded-full bg-brand/10 blur-3xl" />
           <div
             className="absolute inset-0 opacity-[0.35]"
             style={{
@@ -99,7 +98,7 @@ const LoginPage = () => {
         <div className="relative max-w-xl space-y-6">
           <h1 className="text-[2.75rem] font-semibold leading-[1.08] tracking-tight text-foreground">
             A trusted, governed,{" "}
-            <span className="bg-gradient-to-r from-primary to-brand-blue bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary to-brand bg-clip-text text-transparent">
               agent-ready
             </span>{" "}
             data foundation.
