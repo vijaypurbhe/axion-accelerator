@@ -25,6 +25,7 @@ import { SearchInput } from "@/components/enterprise/FilterBar";
 import { Drawer } from "@/components/enterprise/Overlays";
 import { useAxion } from "@/context/AxionContext";
 import { useClients, useInitiatives, useNotifications } from "@/hooks/useWorkspace";
+import { useSimulationScopeSync } from "@/hooks/useSimulationScope";
 import { ROLES } from "@/domain/rbac";
 import { labelForPath } from "@/app/navigation";
 import { config } from "@/config";
