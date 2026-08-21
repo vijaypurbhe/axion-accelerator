@@ -19,6 +19,8 @@ import type { ActorLike } from "@/repositories/mock/phase2Store";
  * pending AI suggestions. Mirrors the phase2Store persistence and seeding conventions.
  */
 
+import { createScopedStore, isSimulationScope, scopedKey } from "./simulationScope";
+
 const STORE_KEY = "axion.phase3.v1";
 const LATENCY = 120;
 
