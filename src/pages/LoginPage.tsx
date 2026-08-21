@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axionLogo from "@/assets/axion-logo.png.asset.json";
+import axionLogo from "@/assets/axion-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -89,7 +89,7 @@ const LoginPage = () => {
 
         <div className="relative flex items-center">
           <img
-            src={axionLogo.url}
+            src={axionLogo}
             alt="Axion Data Accelerator by Tech Mahindra"
             className="h-24 w-auto drop-shadow-sm"
           />
@@ -159,7 +159,7 @@ const LoginPage = () => {
         <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
           <div className="space-y-2">
             <img
-              src={axionLogo.url}
+              src={axionLogo}
               alt="Axion Data Accelerator by Tech Mahindra"
               className="mb-4 h-14 w-auto lg:hidden"
             />

@@ -11,7 +11,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import axionLogo from "@/assets/axion-logo.png.asset.json";
+import axionLogo from "@/assets/axion-logo.png";
 import { LEGACY_LINKS, NAV_GROUPS, NAV_ITEMS, type NavItem } from "@/app/navigation";
 
 export const AppSidebar = () => {
@@ -49,7 +49,7 @@ export const AppSidebar = () => {
       <SidebarContent className="pt-3">
         <div className={cn("px-3 pb-2", collapsed && "px-2")}>
           <img
-            src={axionLogo.url}
+            src={axionLogo}
             alt="Axion Data Accelerator by Tech Mahindra"
             className={cn("w-auto", collapsed ? "h-7" : "h-9")}
             style={collapsed ? { objectFit: "cover", objectPosition: "left", width: "1.75rem" } : undefined}

@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import axionLogo from "@/assets/axion-logo.png.asset.json";
+import axionLogo from "@/assets/axion-logo.png";
 import { setAgentTenantContext } from "@/services/phase6";
 import { Bell, ChevronRight, GraduationCap, HelpCircle, LogOut, Settings, UserCog } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -169,7 +169,7 @@ const TopBar = () => {
       <div className="flex h-14 items-center gap-3 px-4">
         <SidebarTrigger aria-label="Toggle navigation" />
         <Link to="/portfolio" className="hidden items-baseline gap-2 md:flex">
-          <img src={axionLogo.url} alt="Axion Data Accelerator by Tech Mahindra" className="h-7 w-auto" />
+          <img src={axionLogo} alt="Axion Data Accelerator by Tech Mahindra" className="h-7 w-auto" />
         </Link>
 
         <SearchInput
