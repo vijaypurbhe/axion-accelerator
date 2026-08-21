@@ -4,6 +4,7 @@ import type { AgentDesignRecord, AgentReview, AgentSuggestion } from "@/domain/p
 
 /** Phase 6 mock persistence. Mirrors the Phase 2-5 store pattern so a live adapter can replace it. */
 
+import { isSimulationScope, scopedKey } from "./simulationScope";
 const STORE_KEY = "axion.phase6.v1";
 const LATENCY = 110;
 
