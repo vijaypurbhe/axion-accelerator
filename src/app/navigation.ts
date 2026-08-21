@@ -7,6 +7,8 @@ import {
   Database,
   FileStack,
   Gauge,
+  GraduationCap,
+
   LayoutDashboard,
   Library,
   Network,

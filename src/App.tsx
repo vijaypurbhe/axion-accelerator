@@ -32,7 +32,9 @@ import GovernanceRiskPage from "@/pages/governance/GovernanceRiskPage";
 import AgentPortfolioPage from "@/pages/agentforce/AgentPortfolioPage";
 import AgentWizardPage from "@/pages/agentforce/AgentWizardPage";
 import AgentWorkbenchPage from "@/pages/agentforce/AgentWorkbenchPage";
+import SimulationHubPage from "@/pages/simulation/SimulationHubPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+
 import {
   AdministrationPage,
   DeploymentPage,
@@ -85,6 +87,8 @@ const App = () => (
               <Route path="/monitoring" element={<MonitoringPage />} />
               <Route path="/templates" element={<TemplatesPage />} />
               <Route path="/administration" element={<AdministrationPage />} />
+              <Route path="/simulation" element={<SimulationHubPage />} />
+
 
               <Route path="/lifecycle-manager" element={<Navigate to="/lifecycle-manager/discover" replace />} />
               <Route path="/lifecycle-manager/:stageId" element={<LifecycleManagerPage />} />
