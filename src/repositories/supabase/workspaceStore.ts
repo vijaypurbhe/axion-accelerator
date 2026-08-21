@@ -364,8 +364,10 @@ export const supabaseIntegrationAdapter: IntegrationAdapter = {
       const { data, error } = await supabase.from("clients").select("*").neq("status", "archived");
       if (error) fail("Could not load client workspaces", error);
       const clients = ((data ?? []) as Record<string, unknown>[]).map(clientFromRow);
-      await Promise.all(clients.map((client) => ensureSeeded(client.id)));
+      clients.forEach((client) => simulationFlags.set(client.id, Boolean(client.isSimulation)));
+      await Promise.all(clients.filter((client) => client.isSimulation).map((client) => ensureSeeded(client.id)));
       return clients;
+
     },
     getClient: async (clientId) => {
       const { data, error } = await supabase.from("clients").select("*").eq("id", clientId).maybeSingle();
