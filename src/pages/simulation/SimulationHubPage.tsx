@@ -40,7 +40,7 @@ const SimulationHubPage = () => {
   });
 
   if (clients.isLoading) return <LoadingState label="Loading simulation workspaces" />;
-  if (clients.isError) return <ErrorState description="Simulation workspaces could not be loaded." />;
+  if (clients.isError) return <ErrorState message="Simulation workspaces could not be loaded." />;
 
   const simulations = (clients.data ?? []).filter((client) => client.isSimulation);
 
@@ -74,7 +74,7 @@ const SimulationHubPage = () => {
         {simulations.length === 0 ? (
           <EmptyState
             title="No simulation workspaces available"
-            description="Ask an administrator to enable the BFSI training scenarios for your account."
+            message="Ask an administrator to enable the BFSI training scenarios for your account."
           />
         ) : (
           <div className="grid gap-3 lg:grid-cols-2">

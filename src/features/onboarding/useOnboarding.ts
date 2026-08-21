@@ -72,7 +72,7 @@ export const useSaveOnboardingState = () => {
       if (patch.wizardComplete !== undefined) payload.wizard_complete = patch.wizardComplete;
       if (patch.completedSteps !== undefined) payload.completed_steps = patch.completedSteps;
       if (patch.checklistDismissed !== undefined) payload.checklist_dismissed = patch.checklistDismissed;
-      const { error } = await supabase.from("user_onboarding").upsert(payload, { onConflict: "user_id" });
+      const { error } = await supabase.from("user_onboarding").upsert(payload as never, { onConflict: "user_id" });
       if (error) throw new Error(error.message);
     },
     onSuccess: () => {
