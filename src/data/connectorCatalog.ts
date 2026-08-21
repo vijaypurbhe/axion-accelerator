@@ -1,3 +1,4 @@
+import { isSimulationScope } from "@/repositories/mock/simulationScope";
 import type { ConnectorDefinition, ConnectorId, ConnectorPayload } from "@/domain/metadataImport";
 
 /**
