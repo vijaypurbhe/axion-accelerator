@@ -17,6 +17,8 @@ import type { LifecycleStageId } from "@/domain/types";
 
 /** Phase 5 mock persistence. Mirrors the Phase 2/3/4 store pattern so a live adapter can replace it. */
 
+import { isSimulationScope, scopedKey } from "./simulationScope";
+
 const STORE_KEY = "axion.phase5.v1";
 const LATENCY = 110;
 
