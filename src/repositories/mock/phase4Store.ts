@@ -19,6 +19,8 @@ import type {
 
 /** Phase 4 mock persistence. Mirrors the Phase 2/3 store pattern so a live adapter can replace it. */
 
+import { createScopedStore, isSimulationScope, scopedKey } from "./simulationScope";
+
 const STORE_KEY = "axion.phase4.v1";
 const LATENCY = 110;
 
