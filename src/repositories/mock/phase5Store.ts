@@ -490,11 +490,12 @@ export const phase5Controls = {
     const existing = db.profiles.find((p) => p.initiativeId === initiativeId);
     if (existing) return delay(existing);
     const created: ApplicabilityProfile = {
-      ...seedApplicabilityProfile(),
+      ...(isSimulationScope() ? seedApplicabilityProfile() : { answers: {} }),
       initiativeId,
       updatedAt: now(),
       updatedBy: "system",
     };
+
     db.profiles.push(created);
     persist();
     return delay(created);
