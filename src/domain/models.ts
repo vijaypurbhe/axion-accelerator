@@ -61,7 +61,10 @@ export interface Client extends AuditableRecord {
   readonly description: string;
   readonly status: "active" | "prospect" | "archived";
   readonly brandingAccent: string;
+  /** True for training/simulation workspaces that carry demonstration content. */
+  readonly isSimulation?: boolean;
 }
+
 
 export interface Initiative extends AuditableRecord {
   readonly clientId: string;
