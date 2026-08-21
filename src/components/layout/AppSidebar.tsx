@@ -11,6 +11,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import axionLogo from "@/assets/axion-logo.png.asset.json";
 import { LEGACY_LINKS, NAV_GROUPS, NAV_ITEMS, type NavItem } from "@/app/navigation";
 
 export const AppSidebar = () => {
