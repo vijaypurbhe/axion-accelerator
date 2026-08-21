@@ -321,7 +321,9 @@ export const AppShell = () => {
     </div>
     <FirstRunGate />
   </SidebarProvider>
-);
+  );
+};
+
 
 export default AppShell;
 
