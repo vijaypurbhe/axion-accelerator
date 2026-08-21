@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { setAgentTenantContext } from "@/services/phase6";
-import { Bell, ChevronRight, HelpCircle, LogOut, Settings, UserCog } from "lucide-react";
+import { Bell, ChevronRight, GraduationCap, HelpCircle, LogOut, Settings, UserCog } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +31,9 @@ import { config } from "@/config";
 import { relativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { RoleId } from "@/domain/models";
+import FirstRunWizard from "@/features/onboarding/FirstRunWizard";
+import { useOnboardingState } from "@/features/onboarding/useOnboarding";
+
 
 const Breadcrumbs = () => {
   const { pathname } = useLocation();
