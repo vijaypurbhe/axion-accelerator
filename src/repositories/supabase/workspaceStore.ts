@@ -167,6 +167,7 @@ const clientFromRow = (row: Record<string, unknown>): Client => ({
   description: String(row.description ?? ""),
   brandingAccent: String(row.branding_accent ?? "#E23125"),
   status: String(row.status ?? "active") as Client["status"],
+  isSimulation: Boolean(row.is_demo),
   createdAt: String(row.created_at),
   createdBy: String(row.created_by ?? ""),
   updatedAt: String(row.updated_at),
@@ -174,17 +175,33 @@ const clientFromRow = (row: Record<string, unknown>): Client => ({
   version: 1,
 });
 
-/* --------------------------- one-time demo seeding -------------------------- */
+/* ----------------------- simulation workspace seeding ---------------------- */
 
 const seededClients = new Set<string>();
+const simulationFlags = new Map<string, boolean>();
+
+/** Only simulation/training workspaces receive demonstration content. */
+const isSimulationWorkspace = async (clientId: string): Promise<boolean> => {
+  const cached = simulationFlags.get(clientId);
+  if (cached !== undefined) return cached;
+  const { data } = await supabase.from("clients").select("is_demo").eq("id", clientId).maybeSingle();
+  const flag = Boolean((data as { is_demo?: boolean } | null)?.is_demo);
+  simulationFlags.set(clientId, flag);
+  return flag;
+};
 
 /**
- * Demo workspaces open with the BFSI walkthrough content. Seeding runs once per
- * client workspace: a completion marker is written only after the content lands,
- * and every write ignores duplicates so parallel tabs cannot create doubles.
+ * Simulation workspaces open with the BFSI walkthrough content. Delivery
+ * workspaces stay empty. Seeding runs once per workspace: a completion marker is
+ * written only after the content lands, and every write ignores duplicates so
+ * parallel tabs cannot create doubles.
  */
 const ensureSeeded = async (clientId: string): Promise<void> => {
   if (seededClients.has(clientId)) return;
+  if (!(await isSimulationWorkspace(clientId))) {
+    seededClients.add(clientId);
+    return;
+  }
   seededClients.add(clientId);
 
   const { data: marker } = await supabase
@@ -193,6 +210,7 @@ const ensureSeeded = async (clientId: string): Promise<void> => {
     .eq("id", `seed-marker-${clientId}`)
     .maybeSingle();
   if (marker) return;
+
 
   const byClient = <T extends { tenantId: string }>(rows: readonly T[]) =>
 
