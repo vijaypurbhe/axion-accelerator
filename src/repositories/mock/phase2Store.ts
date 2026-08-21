@@ -21,6 +21,8 @@ import type {
   StageWaiver,
 } from "@/domain/phase2";
 
+import { createScopedStore, isSimulationScope, scopedKey } from "./simulationScope";
+
 const STORE_KEY = "axion.phase2.v1";
 const LATENCY = 120;
 
