@@ -15,6 +15,7 @@ import { useAxion } from "@/context/AxionContext";
 import { useActor } from "@/hooks/useWorkspace";
 import { useActiveInitiativeId, useSaveDataProduct } from "@/hooks/usePhase3";
 import { CONNECTORS, connectorById, fetchConnectorMetadata } from "@/data/connectorCatalog";
+import { useClients } from "@/hooks/useWorkspace";
 import { normalizeConnectorPayload, toDataProductDraft } from "@/services/metadataNormalizer";
 import type { ConnectorId, NormalizationResult, NormalizedEntity, NormalizedField } from "@/domain/metadataImport";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,8 @@ const MetadataImportWizardPage = () => {
   const { activeClientId } = useAxion();
   const initiativeId = useActiveInitiativeId();
   const saveProduct = useSaveDataProduct();
+  const { data: clients = [] } = useClients();
+  const isSimulation = clients.find((client) => client.id === activeClientId)?.isSimulation ?? false;
 
   const [step, setStep] = useState<Step>("connect");
   const [connectorId, setConnectorId] = useState<ConnectorId>("salesforce");
