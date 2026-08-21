@@ -422,22 +422,38 @@ const createSeed = (): Phase5Store => ({
   waivers: [],
 });
 
+const createEmpty = (): Phase5Store => ({
+  instances: [],
+  profiles: [],
+  evidence: [],
+  tests: [],
+  bodies: [],
+  raci: [],
+  risks: [],
+  waivers: [],
+});
+
+const baseStore = (): Phase5Store => (isSimulationScope() ? createSeed() : createEmpty());
+
 let store: Phase5Store | null = null;
+let storeScope: boolean | null = null;
 
 const persist = () => {
   if (typeof window === "undefined" || !store) return;
   try {
-    window.localStorage.setItem(STORE_KEY, JSON.stringify(store));
+    window.localStorage.setItem(scopedKey(STORE_KEY), JSON.stringify(store));
   } catch {
     /* storage unavailable — in-memory only */
   }
 };
 
 const read = (): Phase5Store => {
-  if (store) return store;
+  const simulation = isSimulationScope();
+  if (store && storeScope === simulation) return store;
+  storeScope = simulation;
   if (typeof window !== "undefined") {
     try {
-      const raw = window.localStorage.getItem(STORE_KEY);
+      const raw = window.localStorage.getItem(scopedKey(STORE_KEY));
       if (raw) {
         store = JSON.parse(raw) as Phase5Store;
         return store;
@@ -446,15 +462,17 @@ const read = (): Phase5Store => {
       /* fall through to seed */
     }
   }
-  store = createSeed();
+  store = baseStore();
   persist();
   return store;
 };
 
 export const resetPhase5Store = () => {
-  store = createSeed();
+  storeScope = isSimulationScope();
+  store = baseStore();
   persist();
 };
+
 
 const touch = <T extends { updatedAt: string; updatedBy: string }>(value: T, actor: ActorLike): T => ({
   ...value,
