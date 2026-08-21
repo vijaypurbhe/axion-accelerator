@@ -24,28 +24,34 @@ interface Phase6Store {
 }
 
 const seed = (): Phase6Store => ({ agents: seedAgents(), acceptedSuggestions: [] });
+const empty = (): Phase6Store => ({ agents: [], acceptedSuggestions: [] });
+const baseStore = (): Phase6Store => (isSimulationScope() ? seed() : empty());
 
 let cache: Phase6Store | null = null;
+let cacheScope: boolean | null = null;
 
 const read = (): Phase6Store => {
-  if (cache) return cache;
+  const simulation = isSimulationScope();
+  if (cache && cacheScope === simulation) return cache;
+  cacheScope = simulation;
   if (typeof window === "undefined") {
-    cache = seed();
+    cache = baseStore();
     return cache;
   }
   try {
-    const raw = window.localStorage.getItem(STORE_KEY);
-    cache = raw ? (JSON.parse(raw) as Phase6Store) : seed();
+    const raw = window.localStorage.getItem(scopedKey(STORE_KEY));
+    cache = raw ? (JSON.parse(raw) as Phase6Store) : baseStore();
   } catch {
-    cache = seed();
+    cache = baseStore();
   }
-  if (!cache.agents || cache.agents.length === 0) cache = seed();
+  if (!cache.agents) cache = baseStore();
+  if (simulation && cache.agents.length === 0) cache = seed();
   return cache;
 };
 
 const persist = () => {
   if (typeof window === "undefined" || !cache) return;
-  window.localStorage.setItem(STORE_KEY, JSON.stringify(cache));
+  window.localStorage.setItem(scopedKey(STORE_KEY), JSON.stringify(cache));
 };
 
 const touch = (agent: AgentDesignRecord, actor: ActorLike): AgentDesignRecord => ({
@@ -55,9 +61,11 @@ const touch = (agent: AgentDesignRecord, actor: ActorLike): AgentDesignRecord =>
 });
 
 export const resetPhase6Store = () => {
-  cache = seed();
+  cacheScope = isSimulationScope();
+  cache = baseStore();
   persist();
 };
+
 
 export const phase6Agents = {
   list: (initiativeId: string) => delay(read().agents.filter((a) => a.initiativeId === initiativeId)),
