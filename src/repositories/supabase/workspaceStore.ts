@@ -737,4 +737,20 @@ export const supabaseIntegrationAdapter: IntegrationAdapter = {
   },
 };
 
+/**
+ * Restores a simulation workspace to its pristine training content: every seeded
+ * record (and the seed marker) is removed, then the scenario is re-seeded.
+ * Refuses to run against a delivery workspace so client data can never be wiped.
+ */
+export const resetSimulationWorkspace = async (clientId: string): Promise<void> => {
+  if (!(await isSimulationWorkspace(clientId))) {
+    throw new Error("Only simulation workspaces can be reset.");
+  }
+  const { error } = await supabase.from("workspace_records").delete().eq("client_id", clientId);
+  if (error) fail("Could not clear the simulation workspace", error);
+  seededClients.delete(clientId);
+  await ensureSeeded(clientId);
+};
+
+
 export const LIFECYCLE_ORDER = LIFECYCLE_STAGES.map((s) => s.id);
