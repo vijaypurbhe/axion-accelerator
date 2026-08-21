@@ -59,11 +59,8 @@ const LoginPage = () => {
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[1.1fr_1fr]">
       <section className="hidden flex-col justify-between border-r border-border bg-surface px-12 py-12 lg:flex">
-        <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
-            AX
-          </span>
-          <span className="text-sm font-semibold tracking-tight text-foreground">Tech Mahindra Axion</span>
+        <div className="flex items-center">
+          <img src={axionLogo.url} alt="Axion Data Accelerator by Tech Mahindra" className="h-11 w-auto" />
         </div>
 
         <div className="max-w-xl space-y-5">
