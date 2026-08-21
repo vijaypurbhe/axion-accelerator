@@ -426,7 +426,9 @@ const createSeed = (): Phase5Store => ({
 
 /** Blank questionnaire answers for delivery workspaces. */
 const emptyAnswers = (): ApplicabilityProfile["answers"] =>
-  Object.fromEntries(APPLICABILITY_FACTORS.map((factor) => [factor.id, []])) as ApplicabilityProfile["answers"];
+  Object.fromEntries(
+    APPLICABILITY_FACTORS.map((factor) => [factor.id, [] as readonly string[]]),
+  ) as unknown as ApplicabilityProfile["answers"];
 
 const createEmpty = (): Phase5Store => ({
   instances: [],
