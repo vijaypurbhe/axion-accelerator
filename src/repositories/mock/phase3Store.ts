@@ -19,6 +19,8 @@ import type { ActorLike } from "@/repositories/mock/phase2Store";
  * pending AI suggestions. Mirrors the phase2Store persistence and seeding conventions.
  */
 
+import { createScopedStore, isSimulationScope, scopedKey } from "./simulationScope";
+
 const STORE_KEY = "axion.phase3.v1";
 const LATENCY = 120;
 
@@ -371,32 +373,38 @@ const seedStore = (): Phase3Store => {
   };
 };
 
-let store: Phase3Store = load();
+const emptyStore = (): Phase3Store => ({ products: [], mappings: [], suggestions: [] });
 
-function load(): Phase3Store {
-  if (typeof window === "undefined") return seedStore();
+const baseStore = (simulation: boolean): Phase3Store => (simulation ? seedStore() : emptyStore());
+
+const store: Phase3Store = createScopedStore<Phase3Store>((simulation) => {
+  if (typeof window === "undefined") return baseStore(simulation);
   try {
-    const raw = window.localStorage.getItem(STORE_KEY);
-    if (!raw) return seedStore();
+    const raw = window.localStorage.getItem(scopedKey(STORE_KEY));
+    if (!raw) return baseStore(simulation);
     const parsed = JSON.parse(raw) as Phase3Store;
-    return { ...seedStore(), ...parsed };
+    return { ...baseStore(simulation), ...parsed };
   } catch {
-    return seedStore();
+    return baseStore(simulation);
   }
-}
+});
 
 const persist = () => {
   try {
-    window.localStorage.setItem(STORE_KEY, JSON.stringify(store));
+    window.localStorage.setItem(scopedKey(STORE_KEY), JSON.stringify(store));
   } catch {
     /* storage unavailable — session-only state */
   }
 };
 
 export const resetPhase3Store = () => {
-  store = seedStore();
+  const fresh = baseStore(isSimulationScope());
+  for (const [key, value] of Object.entries(fresh)) {
+    (store as unknown as Record<string, unknown>)[key] = value;
+  }
   persist();
 };
+
 
 /* -------------------------------- products ---------------------------------- */
 

@@ -25,6 +25,7 @@ import { SearchInput } from "@/components/enterprise/FilterBar";
 import { Drawer } from "@/components/enterprise/Overlays";
 import { useAxion } from "@/context/AxionContext";
 import { useClients, useInitiatives, useNotifications } from "@/hooks/useWorkspace";
+import { useSimulationScopeSync } from "@/hooks/useSimulationScope";
 import { ROLES } from "@/domain/rbac";
 import { labelForPath } from "@/app/navigation";
 import { config } from "@/config";
@@ -302,7 +303,10 @@ const FirstRunGate = () => {
   return <FirstRunWizard open onOpenChange={(open) => setDismissed(!open)} />;
 };
 
-export const AppShell = () => (
+export const AppShell = () => {
+  useSimulationScopeSync();
+  return (
+
   <SidebarProvider>
     <div className="flex min-h-screen w-full bg-background">
       <AppSidebar />
@@ -318,7 +322,9 @@ export const AppShell = () => (
     </div>
     <FirstRunGate />
   </SidebarProvider>
-);
+  );
+};
+
 
 export default AppShell;
 

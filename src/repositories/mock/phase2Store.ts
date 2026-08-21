@@ -21,6 +21,8 @@ import type {
   StageWaiver,
 } from "@/domain/phase2";
 
+import { createScopedStore, isSimulationScope, scopedKey } from "./simulationScope";
+
 const STORE_KEY = "axion.phase2.v1";
 const LATENCY = 120;
 
@@ -336,31 +338,50 @@ const seedStore = (): Phase2Store => ({
   blueprintVersion: { [INITIATIVE_C360]: 3 },
 });
 
-let store: Phase2Store = load();
+const emptyStore = (): Phase2Store => ({
+  items: [],
+  comments: [],
+  events: [],
+  waivers: [],
+  advancements: [],
+  responses: {},
+  recommendations: [],
+  components: [],
+  connections: [],
+  adrs: [],
+  approvals: [],
+  blueprintVersion: {},
+});
 
-function load(): Phase2Store {
-  if (typeof window === "undefined") return seedStore();
+const baseStore = (simulation: boolean): Phase2Store => (simulation ? seedStore() : emptyStore());
+
+const store: Phase2Store = createScopedStore<Phase2Store>((simulation) => {
+  if (typeof window === "undefined") return baseStore(simulation);
   try {
-    const raw = window.localStorage.getItem(STORE_KEY);
-    if (!raw) return seedStore();
-    return { ...seedStore(), ...(JSON.parse(raw) as Phase2Store) };
+    const raw = window.localStorage.getItem(scopedKey(STORE_KEY));
+    if (!raw) return baseStore(simulation);
+    return { ...baseStore(simulation), ...(JSON.parse(raw) as Phase2Store) };
   } catch {
-    return seedStore();
+    return baseStore(simulation);
   }
-}
+});
 
 const persist = () => {
   try {
-    window.localStorage.setItem(STORE_KEY, JSON.stringify(store));
+    window.localStorage.setItem(scopedKey(STORE_KEY), JSON.stringify(store));
   } catch {
     /* storage unavailable — session-only state */
   }
 };
 
 export const resetPhase2Store = () => {
-  store = seedStore();
+  const fresh = baseStore(isSimulationScope());
+  for (const [key, value] of Object.entries(fresh)) {
+    (store as unknown as Record<string, unknown>)[key] = value;
+  }
   persist();
 };
+
 
 const ensureItems = (initiativeId: string) => {
   if (!store.items.some((item) => item.initiativeId === initiativeId)) {

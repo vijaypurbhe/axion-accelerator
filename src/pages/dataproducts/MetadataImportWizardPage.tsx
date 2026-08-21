@@ -15,6 +15,7 @@ import { useAxion } from "@/context/AxionContext";
 import { useActor } from "@/hooks/useWorkspace";
 import { useActiveInitiativeId, useSaveDataProduct } from "@/hooks/usePhase3";
 import { CONNECTORS, connectorById, fetchConnectorMetadata } from "@/data/connectorCatalog";
+import { useClients } from "@/hooks/useWorkspace";
 import { normalizeConnectorPayload, toDataProductDraft } from "@/services/metadataNormalizer";
 import type { ConnectorId, NormalizationResult, NormalizedEntity, NormalizedField } from "@/domain/metadataImport";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,8 @@ const MetadataImportWizardPage = () => {
   const { activeClientId } = useAxion();
   const initiativeId = useActiveInitiativeId();
   const saveProduct = useSaveDataProduct();
+  const { data: clients = [] } = useClients();
+  const isSimulation = clients.find((client) => client.id === activeClientId)?.isSimulation ?? false;
 
   const [step, setStep] = useState<Step>("connect");
   const [connectorId, setConnectorId] = useState<ConnectorId>("salesforce");
@@ -295,6 +298,13 @@ const MetadataImportWizardPage = () => {
             {missingCredentials.length > 0 ? (
               <p className="mt-3 text-xs text-muted-foreground">Required: {missingCredentials.join(", ")}.</p>
             ) : null}
+            {!isSimulation ? (
+              <p className="mt-3 text-xs text-muted-foreground">
+                Live connector reads are not enabled in this workspace yet. Sample metadata for each platform is
+                available inside a simulation / training workspace.
+              </p>
+            ) : null}
+
           </SectionCard>
         </div>
       ) : null}

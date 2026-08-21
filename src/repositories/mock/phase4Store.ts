@@ -19,6 +19,8 @@ import type {
 
 /** Phase 4 mock persistence. Mirrors the Phase 2/3 store pattern so a live adapter can replace it. */
 
+import { createScopedStore, isSimulationScope, scopedKey } from "./simulationScope";
+
 const STORE_KEY = "axion.phase4.v1";
 const LATENCY = 110;
 
@@ -274,33 +276,47 @@ const seed = (): Phase4Store => {
   };
 };
 
-const load = (): Phase4Store => {
-  if (typeof window === "undefined") return seed();
-  try {
-    const raw = window.localStorage.getItem(STORE_KEY);
-    if (!raw) return seed();
-    const parsed = JSON.parse(raw) as Phase4Store;
-    return { ...seed(), ...parsed };
-  } catch {
-    return seed();
-  }
-};
+const emptyStore = (): Phase4Store => ({
+  policies: [],
+  assessments: [],
+  decisions: [],
+  identityPolicies: [],
+  runs: [],
+  exceptions: [],
+  suggestions: [],
+});
 
-let store: Phase4Store = load();
+const baseStore = (simulation: boolean): Phase4Store => (simulation ? seed() : emptyStore());
+
+const store: Phase4Store = createScopedStore<Phase4Store>((simulation) => {
+  if (typeof window === "undefined") return baseStore(simulation);
+  try {
+    const raw = window.localStorage.getItem(scopedKey(STORE_KEY));
+    if (!raw) return baseStore(simulation);
+    const parsed = JSON.parse(raw) as Phase4Store;
+    return { ...baseStore(simulation), ...parsed };
+  } catch {
+    return baseStore(simulation);
+  }
+});
 
 const persist = () => {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(STORE_KEY, JSON.stringify(store));
+    window.localStorage.setItem(scopedKey(STORE_KEY), JSON.stringify(store));
   } catch {
     /* storage unavailable — in-memory state still serves the session */
   }
 };
 
 export const resetPhase4Store = () => {
-  store = seed();
+  const fresh = baseStore(isSimulationScope());
+  for (const [key, value] of Object.entries(fresh)) {
+    (store as unknown as Record<string, unknown>)[key] = value;
+  }
   persist();
 };
+
 
 /* ------------------------------- connectivity ------------------------------ */
 

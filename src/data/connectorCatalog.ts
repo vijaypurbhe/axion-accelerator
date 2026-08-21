@@ -1,3 +1,4 @@
+import { isSimulationScope } from "@/repositories/mock/simulationScope";
 import type { ConnectorDefinition, ConnectorId, ConnectorPayload } from "@/domain/metadataImport";
 
 /**
@@ -252,10 +253,17 @@ const PAYLOADS: Record<ConnectorId, ConnectorPayload> = {
 };
 
 /**
- * Mocked metadata fetch. Swap the body for an Edge Function invocation per
- * connector; the returned shape and the normalization layer stay unchanged.
+ * Sample metadata fetch, restricted to simulation / training workspaces.
+ * Delivery workspaces must use live connector credentials — swap the body for an
+ * Edge Function invocation per connector; the normalization layer is unchanged.
  */
 export const fetchConnectorMetadata = async (connectorId: ConnectorId): Promise<ConnectorPayload> => {
+  if (!isSimulationScope()) {
+    throw new Error(
+      "Live connector reads are not enabled yet. Sample metadata is only available inside a simulation / training workspace.",
+    );
+  }
   await new Promise((resolve) => setTimeout(resolve, 550));
   return PAYLOADS[connectorId];
 };
+
