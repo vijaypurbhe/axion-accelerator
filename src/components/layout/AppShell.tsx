@@ -168,9 +168,7 @@ const TopBar = () => {
       <div className="flex h-14 items-center gap-3 px-4">
         <SidebarTrigger aria-label="Toggle navigation" />
         <Link to="/portfolio" className="hidden items-baseline gap-2 md:flex">
-          <span className="whitespace-nowrap text-sm font-semibold tracking-tight text-foreground">
-            Tech Mahindra <span className="text-primary">Axion</span>
-          </span>
+          <img src={axionLogo.url} alt="Axion Data Accelerator by Tech Mahindra" className="h-7 w-auto" />
         </Link>
 
         <SearchInput
