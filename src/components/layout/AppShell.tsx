@@ -302,7 +302,10 @@ const FirstRunGate = () => {
   return <FirstRunWizard open onOpenChange={(open) => setDismissed(!open)} />;
 };
 
-export const AppShell = () => (
+export const AppShell = () => {
+  useSimulationScopeSync();
+  return (
+
   <SidebarProvider>
     <div className="flex min-h-screen w-full bg-background">
       <AppSidebar />
