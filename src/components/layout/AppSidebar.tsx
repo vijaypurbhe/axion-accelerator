@@ -11,6 +11,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import axionLogo from "@/assets/axion-logo.png.asset.json";
 import { LEGACY_LINKS, NAV_GROUPS, NAV_ITEMS, type NavItem } from "@/app/navigation";
 
 export const AppSidebar = () => {
@@ -47,19 +48,12 @@ export const AppSidebar = () => {
     <Sidebar collapsible="icon">
       <SidebarContent className="pt-3">
         <div className={cn("px-3 pb-2", collapsed && "px-2")}>
-          <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
-              AX
-            </span>
-            {!collapsed && (
-              <span className="text-sm font-semibold leading-tight text-sidebar-foreground">
-                Axion
-                <span className="block text-[10px] font-normal uppercase tracking-widest text-sidebar-foreground/60">
-                  Tech Mahindra
-                </span>
-              </span>
-            )}
-          </div>
+          <img
+            src={axionLogo.url}
+            alt="Axion Data Accelerator by Tech Mahindra"
+            className={cn("w-auto", collapsed ? "h-7" : "h-9")}
+            style={collapsed ? { objectFit: "cover", objectPosition: "left", width: "1.75rem" } : undefined}
+          />
         </div>
 
         {NAV_GROUPS.map((group) =>
