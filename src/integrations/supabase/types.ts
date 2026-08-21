@@ -752,6 +752,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_onboarding: {
+        Row: {
+          checklist_dismissed: boolean
+          chosen_role: Database["public"]["Enums"]["axion_role"] | null
+          completed_steps: string[]
+          created_at: string
+          updated_at: string
+          user_id: string
+          wizard_complete: boolean
+          wizard_step: number
+        }
+        Insert: {
+          checklist_dismissed?: boolean
+          chosen_role?: Database["public"]["Enums"]["axion_role"] | null
+          completed_steps?: string[]
+          created_at?: string
+          updated_at?: string
+          user_id: string
+          wizard_complete?: boolean
+          wizard_step?: number
+        }
+        Update: {
+          checklist_dismissed?: boolean
+          chosen_role?: Database["public"]["Enums"]["axion_role"] | null
+          completed_steps?: string[]
+          created_at?: string
+          updated_at?: string
+          user_id?: string
+          wizard_complete?: boolean
+          wizard_step?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

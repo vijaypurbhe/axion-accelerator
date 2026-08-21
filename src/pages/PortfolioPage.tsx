@@ -22,6 +22,8 @@ import { WorkspaceContextBanner } from "@/components/enterprise/WorkspaceContext
 import NewClientWizard from "@/features/workspace/NewClientWizard";
 import NewInitiativeWizard from "@/features/workspace/NewInitiativeWizard";
 import RoleDashboard from "@/features/dashboards/RoleDashboard";
+import RoleChecklist from "@/features/onboarding/RoleChecklist";
+
 import { useAxion } from "@/context/AxionContext";
 import {
   useActivity,
@@ -136,6 +138,8 @@ const PortfolioPage = () => {
       />
 
       <WorkspaceContextBanner client={activeClient} initiative={initiativeList.find((i) => i.id === activeInitiativeId)} role={persona} />
+
+      <RoleChecklist role={persona} />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <MetricCard label="Active clients" value={clientList.length} icon={<Building2 className="h-4 w-4" />} hint="Logically isolated workspaces" />

@@ -7,6 +7,8 @@ import {
   Database,
   FileStack,
   Gauge,
+  GraduationCap,
+
   LayoutDashboard,
   Library,
   Network,
@@ -46,7 +48,9 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { title: "Monitoring", url: "/monitoring", icon: Activity, group: "Operate" },
   { title: "Templates", url: "/templates", icon: FileStack, group: "Platform" },
   { title: "Administration", url: "/administration", icon: Settings, group: "Platform" },
+  { title: "Simulation & Training", url: "/simulation", icon: GraduationCap, group: "Platform" },
   { title: "Audit Trail", url: "/audit", icon: ScrollText, group: "Platform" },
+
 ];
 
 export const NAV_GROUPS: readonly NavItem["group"][] = [

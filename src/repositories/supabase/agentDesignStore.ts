@@ -201,14 +201,18 @@ const loadChildren = async (agentIds: string[]) => {
   });
 };
 
-/** Insert the seeded BFSI agents for an initiative the first time it is opened. */
+/** Insert the seeded BFSI agents the first time a simulation initiative is opened. */
 const ensureSeeded = async (initiativeId: string, tenantId: string) => {
+  const { data: client } = await supabase.from("clients").select("is_demo").eq("id", tenantId).maybeSingle();
+  if (!(client as { is_demo?: boolean } | null)?.is_demo) return;
+
   const { count, error } = await supabase
     .from("agents")
     .select("id", { count: "exact", head: true })
     .eq("initiative_id", initiativeId);
   if (error) fail("agents count", error);
   if ((count ?? 0) > 0) return;
+
 
   for (const agent of seedAgents()) {
     await insertAgentAggregate({ ...agent, initiativeId }, tenantId, { actor: "seed@axion", role: agent.overview.owner });

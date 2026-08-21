@@ -167,6 +167,7 @@ const clientFromRow = (row: Record<string, unknown>): Client => ({
   description: String(row.description ?? ""),
   brandingAccent: String(row.branding_accent ?? "#E23125"),
   status: String(row.status ?? "active") as Client["status"],
+  isSimulation: Boolean(row.is_demo),
   createdAt: String(row.created_at),
   createdBy: String(row.created_by ?? ""),
   updatedAt: String(row.updated_at),
@@ -174,17 +175,33 @@ const clientFromRow = (row: Record<string, unknown>): Client => ({
   version: 1,
 });
 
-/* --------------------------- one-time demo seeding -------------------------- */
+/* ----------------------- simulation workspace seeding ---------------------- */
 
 const seededClients = new Set<string>();
+const simulationFlags = new Map<string, boolean>();
+
+/** Only simulation/training workspaces receive demonstration content. */
+const isSimulationWorkspace = async (clientId: string): Promise<boolean> => {
+  const cached = simulationFlags.get(clientId);
+  if (cached !== undefined) return cached;
+  const { data } = await supabase.from("clients").select("is_demo").eq("id", clientId).maybeSingle();
+  const flag = Boolean((data as { is_demo?: boolean } | null)?.is_demo);
+  simulationFlags.set(clientId, flag);
+  return flag;
+};
 
 /**
- * Demo workspaces open with the BFSI walkthrough content. Seeding runs once per
- * client workspace: a completion marker is written only after the content lands,
- * and every write ignores duplicates so parallel tabs cannot create doubles.
+ * Simulation workspaces open with the BFSI walkthrough content. Delivery
+ * workspaces stay empty. Seeding runs once per workspace: a completion marker is
+ * written only after the content lands, and every write ignores duplicates so
+ * parallel tabs cannot create doubles.
  */
 const ensureSeeded = async (clientId: string): Promise<void> => {
   if (seededClients.has(clientId)) return;
+  if (!(await isSimulationWorkspace(clientId))) {
+    seededClients.add(clientId);
+    return;
+  }
   seededClients.add(clientId);
 
   const { data: marker } = await supabase
@@ -193,6 +210,7 @@ const ensureSeeded = async (clientId: string): Promise<void> => {
     .eq("id", `seed-marker-${clientId}`)
     .maybeSingle();
   if (marker) return;
+
 
   const byClient = <T extends { tenantId: string }>(rows: readonly T[]) =>
 
@@ -346,8 +364,10 @@ export const supabaseIntegrationAdapter: IntegrationAdapter = {
       const { data, error } = await supabase.from("clients").select("*").neq("status", "archived");
       if (error) fail("Could not load client workspaces", error);
       const clients = ((data ?? []) as Record<string, unknown>[]).map(clientFromRow);
-      await Promise.all(clients.map((client) => ensureSeeded(client.id)));
+      clients.forEach((client) => simulationFlags.set(client.id, Boolean(client.isSimulation)));
+      await Promise.all(clients.filter((client) => client.isSimulation).map((client) => ensureSeeded(client.id)));
       return clients;
+
     },
     getClient: async (clientId) => {
       const { data, error } = await supabase.from("clients").select("*").eq("id", clientId).maybeSingle();
@@ -716,5 +736,21 @@ export const supabaseIntegrationAdapter: IntegrationAdapter = {
     },
   },
 };
+
+/**
+ * Restores a simulation workspace to its pristine training content: every seeded
+ * record (and the seed marker) is removed, then the scenario is re-seeded.
+ * Refuses to run against a delivery workspace so client data can never be wiped.
+ */
+export const resetSimulationWorkspace = async (clientId: string): Promise<void> => {
+  if (!(await isSimulationWorkspace(clientId))) {
+    throw new Error("Only simulation workspaces can be reset.");
+  }
+  const { error } = await supabase.from("workspace_records").delete().eq("client_id", clientId);
+  if (error) fail("Could not clear the simulation workspace", error);
+  seededClients.delete(clientId);
+  await ensureSeeded(clientId);
+};
+
 
 export const LIFECYCLE_ORDER = LIFECYCLE_STAGES.map((s) => s.id);

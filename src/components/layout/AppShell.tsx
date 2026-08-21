@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { setAgentTenantContext } from "@/services/phase6";
-import { Bell, ChevronRight, HelpCircle, LogOut, Settings, UserCog } from "lucide-react";
+import { Bell, ChevronRight, GraduationCap, HelpCircle, LogOut, Settings, UserCog } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +31,9 @@ import { config } from "@/config";
 import { relativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { RoleId } from "@/domain/models";
+import FirstRunWizard from "@/features/onboarding/FirstRunWizard";
+import { useOnboardingState } from "@/features/onboarding/useOnboarding";
+
 
 const Breadcrumbs = () => {
   const { pathname } = useLocation();
@@ -189,9 +192,11 @@ const TopBar = () => {
               {clients.map((client) => (
                 <SelectItem key={client.id} value={client.id}>
                   {client.name}
+                  {client.isSimulation ? " · Training" : ""}
                 </SelectItem>
               ))}
             </SelectContent>
+
           </Select>
 
           <Select
@@ -265,6 +270,38 @@ const TopBar = () => {
   );
 };
 
+/** Makes it unmistakable when the user is working inside training content. */
+const SimulationBanner = () => {
+  const { activeClientId } = useAxion();
+  const { data: clients = [] } = useClients();
+  const active = clients.find((client) => client.id === activeClientId);
+  if (!active?.isSimulation) return null;
+
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-brand-blue/30 bg-brand-blue/5 px-4 py-2.5 text-sm">
+      <GraduationCap className="h-4 w-4 shrink-0 text-brand-blue" aria-hidden />
+      <span className="font-semibold text-foreground">Simulation workspace</span>
+      <span className="text-muted-foreground">
+        {active.name} carries demonstration data for training. Delivery workspaces are unaffected.
+      </span>
+      <Link
+        to="/simulation"
+        className="ml-auto text-xs font-semibold text-brand-blue underline-offset-4 hover:underline"
+      >
+        Simulation &amp; Training
+      </Link>
+    </div>
+  );
+};
+
+/** First-run orientation: shown once until the user completes or skips it. */
+const FirstRunGate = () => {
+  const { data: onboarding, isLoading } = useOnboardingState();
+  const [dismissed, setDismissed] = useState(false);
+  if (isLoading || dismissed || !onboarding || onboarding.wizardComplete) return null;
+  return <FirstRunWizard open onOpenChange={(open) => setDismissed(!open)} />;
+};
+
 export const AppShell = () => (
   <SidebarProvider>
     <div className="flex min-h-screen w-full bg-background">
@@ -273,12 +310,15 @@ export const AppShell = () => (
         <TopBar />
         <main className="flex-1 px-6 py-6">
           <div className="mx-auto w-full max-w-[1600px] space-y-6">
+            <SimulationBanner />
             <Outlet />
           </div>
         </main>
       </div>
     </div>
+    <FirstRunGate />
   </SidebarProvider>
 );
 
 export default AppShell;
+
