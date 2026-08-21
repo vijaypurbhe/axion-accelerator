@@ -189,9 +189,11 @@ const TopBar = () => {
               {clients.map((client) => (
                 <SelectItem key={client.id} value={client.id}>
                   {client.name}
+                  {client.isSimulation ? " · Training" : ""}
                 </SelectItem>
               ))}
             </SelectContent>
+
           </Select>
 
           <Select
