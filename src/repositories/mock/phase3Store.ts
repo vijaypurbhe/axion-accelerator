@@ -400,7 +400,7 @@ const persist = () => {
 export const resetPhase3Store = () => {
   const fresh = baseStore(isSimulationScope());
   for (const [key, value] of Object.entries(fresh)) {
-    (store as Record<string, unknown>)[key] = value;
+    (store as unknown as Record<string, unknown>)[key] = value;
   }
   persist();
 };

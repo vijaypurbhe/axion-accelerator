@@ -424,6 +424,10 @@ const createSeed = (): Phase5Store => ({
   waivers: [],
 });
 
+/** Blank questionnaire answers for delivery workspaces. */
+const emptyAnswers = (): ApplicabilityProfile["answers"] =>
+  Object.fromEntries(APPLICABILITY_FACTORS.map((factor) => [factor.id, []])) as ApplicabilityProfile["answers"];
+
 const createEmpty = (): Phase5Store => ({
   instances: [],
   profiles: [],
@@ -492,7 +496,7 @@ export const phase5Controls = {
     const existing = db.profiles.find((p) => p.initiativeId === initiativeId);
     if (existing) return delay(existing);
     const created: ApplicabilityProfile = {
-      ...(isSimulationScope() ? seedApplicabilityProfile() : { answers: {} }),
+      ...(isSimulationScope() ? seedApplicabilityProfile() : { answers: emptyAnswers() }),
       initiativeId,
       updatedAt: now(),
       updatedBy: "system",
