@@ -79,9 +79,9 @@ const AssessmentPage = () => {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow={`${pack.shortLabel} Readiness Assessment`}
+        eyebrow={`${pack.shortName} Readiness Assessment`}
         title="Data and agent readiness"
-        description={`Weighted, evidence-backed assessment across ${ASSESSMENT_CATEGORIES.length} readiness categories, weighted for ${pack.label}, for ${initiative.data?.name ?? "the active initiative"}.`}
+        description={`Weighted, evidence-backed assessment across ${ASSESSMENT_CATEGORIES.length} readiness categories, weighted for ${pack.name}, for ${initiative.data?.name ?? "the active initiative"}.`}
         actions={
           <>
             <Button variant="outline" onClick={() => setShowExport(true)}>
@@ -182,7 +182,7 @@ const AssessmentPage = () => {
 
         <TabsContent value="scorecard" className="space-y-4 pt-4">
           <div className="grid gap-4 lg:grid-cols-2">
-            <SectionCard title="Maturity profile" description={`Current score against the ${pack.shortLabel} target per category.`}>
+            <SectionCard title="Maturity profile" description={`Current score against the ${pack.shortName} target per category.`}>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={radarData} outerRadius="72%">
@@ -277,7 +277,7 @@ const AssessmentPage = () => {
             </p>
             <div className="rounded-lg border border-border p-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-brand">Tech Mahindra Axion</p>
-              <h3 className="text-base font-semibold">{initiative.data?.name ?? "Initiative"} — {pack.shortLabel} readiness</h3>
+              <h3 className="text-base font-semibold">{initiative.data?.name ?? "Initiative"} — {pack.shortName} readiness</h3>
               <ul className="mt-2 space-y-1 text-xs text-foreground">
                 <li>Overall readiness: {summary.overall} ({maturityName(summary.maturity)})</li>
                 <li>Risk-adjusted readiness: {summary.riskAdjusted}</li>
