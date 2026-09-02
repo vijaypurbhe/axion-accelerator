@@ -1,4 +1,7 @@
 import type { AssessmentCategory, AssessmentQuestion, QuestionOption } from "@/domain/phase2";
+import { INDUSTRY_QUESTIONS } from "./assessmentPacks";
+import { appliesToIndustry, DEFAULT_INDUSTRY } from "@/domain/industries";
+import type { Industry } from "@/domain/types";
 
 /** Twelve readiness dimensions scored by the Axion assessment engine. */
 export const ASSESSMENT_CATEGORIES: readonly AssessmentCategory[] = [
@@ -119,8 +122,8 @@ const q = (
   input: Omit<AssessmentQuestion, "id"> & { readonly id?: string },
 ): AssessmentQuestion => ({ ...input, id: input.id ?? `q-${(seq += 1).toString().padStart(3, "0")}` });
 
-/** BFSI-weighted question bank. Every category carries at least one mandatory question. */
-export const ASSESSMENT_QUESTIONS: readonly AssessmentQuestion[] = [
+/** Cross-industry + BFSI-weighted core question bank. */
+const CORE_QUESTIONS: readonly AssessmentQuestion[] = [
   /* -------------------------- business strategy -------------------------- */
   q({
     categoryId: "business-strategy",
@@ -560,8 +563,20 @@ export const ASSESSMENT_QUESTIONS: readonly AssessmentQuestion[] = [
   }),
 ];
 
-export const questionsByCategory = (categoryId: AssessmentCategory["id"]): readonly AssessmentQuestion[] =>
-  ASSESSMENT_QUESTIONS.filter((question) => question.categoryId === categoryId);
+/** Full bank across every supported vertical. Filter with `questionsForIndustry`. */
+export const ASSESSMENT_QUESTIONS: readonly AssessmentQuestion[] = [...CORE_QUESTIONS, ...INDUSTRY_QUESTIONS];
+
+/** Questions applicable to a vertical (AUTO inherits the manufacturing baseline). */
+export const questionsForIndustry = (
+  industry: Industry = DEFAULT_INDUSTRY,
+): readonly AssessmentQuestion[] =>
+  ASSESSMENT_QUESTIONS.filter((question) => appliesToIndustry(question.applicability, industry));
+
+export const questionsByCategory = (
+  categoryId: AssessmentCategory["id"],
+  industry: Industry = DEFAULT_INDUSTRY,
+): readonly AssessmentQuestion[] =>
+  questionsForIndustry(industry).filter((question) => question.categoryId === categoryId);
 
 export const assessmentCategory = (categoryId: AssessmentCategory["id"]): AssessmentCategory =>
   ASSESSMENT_CATEGORIES.find((category) => category.id === categoryId) ?? ASSESSMENT_CATEGORIES[0];
