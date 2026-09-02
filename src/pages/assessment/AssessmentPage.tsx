@@ -277,7 +277,7 @@ const AssessmentPage = () => {
             </p>
             <div className="rounded-lg border border-border p-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-brand">Tech Mahindra Axion</p>
-              <h3 className="text-base font-semibold">{initiative.data?.name ?? "Initiative"} — ${pack.shortLabel} readiness</h3>
+              <h3 className="text-base font-semibold">{initiative.data?.name ?? "Initiative"} — {pack.shortLabel} readiness</h3>
               <ul className="mt-2 space-y-1 text-xs text-foreground">
                 <li>Overall readiness: {summary.overall} ({maturityName(summary.maturity)})</li>
                 <li>Risk-adjusted readiness: {summary.riskAdjusted}</li>
