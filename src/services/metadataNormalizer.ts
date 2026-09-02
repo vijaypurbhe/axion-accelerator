@@ -17,6 +17,7 @@ import type {
   DataType,
   Sensitivity,
 } from "@/domain/dataProducts";
+import type { Industry } from "@/domain/types";
 
 /**
  * Schema mapping and normalization layer.
@@ -388,7 +389,7 @@ export const toDataProductDraft = (
     businessPurpose: `Normalized ${entity.connectorId} metadata for the ${entity.domain} domain, imported through the Axion metadata import wizard.`,
     category: "custom",
     domain: entity.domain,
-    industry: "BFSI",
+    industry: options.industry ?? "BFSI",
     businessOwnerRole: "data-steward",
     technicalOwnerRole: "data-engineer",
     isTemplate: false,

@@ -35,7 +35,7 @@ import {
   useRecommendations,
   useRisks,
 } from "@/hooks/useWorkspace";
-import { LIFECYCLE_STAGES } from "@/domain/catalogs";
+import { INDUSTRIES, LIFECYCLE_STAGES } from "@/domain/catalogs";
 import { roleCan } from "@/domain/rbac";
 import { shortDate } from "@/lib/format";
 import type { Client, Initiative, RiskLevel } from "@/domain/models";
