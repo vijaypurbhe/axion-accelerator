@@ -173,11 +173,7 @@ const PortfolioPage = () => {
             label: "Industries",
             value: industryFilter,
             onChange: setIndustryFilter,
-            options: [
-              { value: "BFSI", label: "BFSI" },
-              { value: "HLS", label: "HLS" },
-              { value: "RCPG", label: "RCPG" },
-            ],
+            options: INDUSTRIES.map((industry) => ({ value: industry.id, label: industry.id })),
           },
           {
             id: "stage",

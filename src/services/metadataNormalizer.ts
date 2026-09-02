@@ -340,6 +340,8 @@ export interface DataProductDraftOptions {
   readonly initiativeId: string;
   readonly clientId?: string;
   readonly actor: string;
+  /** Vertical of the owning client workspace; drives industry tagging of the draft. */
+  readonly industry?: Industry;
 }
 
 /** Deterministic draft data product built from one normalized entity. */
