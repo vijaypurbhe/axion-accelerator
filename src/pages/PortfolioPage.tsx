@@ -35,7 +35,7 @@ import {
   useRecommendations,
   useRisks,
 } from "@/hooks/useWorkspace";
-import { LIFECYCLE_STAGES } from "@/domain/catalogs";
+import { INDUSTRIES, LIFECYCLE_STAGES } from "@/domain/catalogs";
 import { roleCan } from "@/domain/rbac";
 import { shortDate } from "@/lib/format";
 import type { Client, Initiative, RiskLevel } from "@/domain/models";
@@ -173,11 +173,7 @@ const PortfolioPage = () => {
             label: "Industries",
             value: industryFilter,
             onChange: setIndustryFilter,
-            options: [
-              { value: "BFSI", label: "BFSI" },
-              { value: "HLS", label: "HLS" },
-              { value: "RCPG", label: "RCPG" },
-            ],
+            options: INDUSTRIES.map((industry) => ({ value: industry.id, label: industry.id })),
           },
           {
             id: "stage",

@@ -5,6 +5,7 @@
  */
 
 import type { IngestionPattern, LifecycleStageId, MaturityLevel, SalesforceProductId } from "./types";
+import type { IndustryApplicability } from "./industries";
 import type { ApprovalState, RiskLevel, RoleId } from "./models";
 
 /* ============================== Lifecycle manager ============================= */
@@ -171,7 +172,7 @@ export interface AssessmentQuestion {
   readonly owner: RoleId;
   readonly guidance?: string;
   readonly evidenceRequired: boolean;
-  readonly applicability: "all" | "bfsi" | "agentforce";
+  readonly applicability: IndustryApplicability;
   /** Numeric questions only. */
   readonly max?: number;
 }

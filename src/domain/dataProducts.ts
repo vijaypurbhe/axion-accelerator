@@ -11,6 +11,8 @@ import type { RoleId } from "@/domain/models";
 export type DataProductCategory =
   | "common"
   | "bfsi"
+  | "mfg"
+  | "auto"
   | "custom"
   | "hls"
   | "rcpg";
@@ -39,7 +41,21 @@ export type DataDomain =
   | "compliance"
   | "org"
   | "location"
-  | "workforce";
+  | "workforce"
+  /* manufacturing & automotive domains */
+  | "asset"
+  | "bom"
+  | "supplier"
+  | "order"
+  | "production"
+  | "quality"
+  | "service"
+  | "parts"
+  | "vehicle"
+  | "dealer"
+  | "warranty"
+  | "telemetry"
+  | "finance";
 
 export type Sensitivity = "public" | "internal" | "confidential" | "restricted" | "pii" | "financial-pii";
 
@@ -372,6 +388,8 @@ export interface RuleSimulationResult {
 export const CATEGORY_LABELS: Record<DataProductCategory, string> = {
   common: "Common enterprise",
   bfsi: "BFSI",
+  mfg: "Manufacturing",
+  auto: "Automotive",
   custom: "Client custom",
   hls: "HLS (extension ready)",
   rcpg: "RCPG (extension ready)",
@@ -403,6 +421,19 @@ export const DOMAIN_LABELS: Record<DataDomain, string> = {
   org: "Organisation",
   location: "Location",
   workforce: "Workforce",
+  asset: "Asset & Installed Base",
+  bom: "Bill of Materials",
+  supplier: "Supplier",
+  order: "Order & Fulfilment",
+  production: "Production",
+  quality: "Quality",
+  service: "Service",
+  parts: "Parts & Aftermarket",
+  vehicle: "Vehicle",
+  dealer: "Dealer & Network",
+  warranty: "Warranty & Claims",
+  telemetry: "Telemetry & Connected",
+  finance: "Finance & Contracts",
 };
 
 export const DIMENSION_LABELS: Record<QualityDimension, string> = {

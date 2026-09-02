@@ -37,6 +37,7 @@ const MetadataImportWizardPage = () => {
   const initiativeId = useActiveInitiativeId();
   const saveProduct = useSaveDataProduct();
   const { data: clients = [] } = useClients();
+  const activeIndustry = clients.find((client) => client.id === activeClientId)?.industry;
   const isSimulation = clients.find((client) => client.id === activeClientId)?.isSimulation ?? false;
 
   const [step, setStep] = useState<Step>("connect");
@@ -86,6 +87,7 @@ const MetadataImportWizardPage = () => {
       const product = toDataProductDraft(entity, {
         initiativeId,
         clientId: activeClientId,
+        industry: activeIndustry,
         actor: actor.actor,
       });
       await saveProduct.mutateAsync({ product, isNew: true });

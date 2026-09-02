@@ -10,6 +10,7 @@ import {
   recommendationService,
 } from "@/services/phase2";
 import { buildAssessmentRecommendations, summariseAssessment } from "@/services/scoring";
+import { useActiveIndustry } from "@/hooks/useIndustry";
 import { recommendArchitecture } from "@/services/architectureRecommender";
 import { INITIATIVE_C360 } from "@/data/bfsiSeed";
 import type { LifecycleStageId } from "@/domain/types";
@@ -218,7 +219,8 @@ export const useAssessmentResponses = (initiativeId: string) =>
 
 export const useAssessmentSummary = (initiativeId: string) => {
   const { data, isLoading, isError } = useAssessmentResponses(initiativeId);
-  const summary = useMemo(() => summariseAssessment(data ?? {}), [data]);
+  const { industry } = useActiveIndustry();
+  const summary = useMemo(() => summariseAssessment(data ?? {}, industry), [data, industry]);
   return { summary, responses: data ?? {}, isLoading, isError };
 };
 
