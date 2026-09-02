@@ -1,4 +1,6 @@
-import { ASSESSMENT_CATEGORIES, ASSESSMENT_QUESTIONS } from "@/data/assessmentBank";
+import { ASSESSMENT_CATEGORIES, questionsForIndustry } from "@/data/assessmentBank";
+import { DEFAULT_INDUSTRY } from "@/domain/industries";
+import type { Industry } from "@/domain/types";
 import { MATURITY_BANDS } from "@/domain/phase2";
 import type {
   AssessmentCategoryId,
@@ -63,8 +65,9 @@ const isAnswered = (question: AssessmentQuestion, response?: AssessmentResponse)
 export const scoreCategory = (
   categoryId: AssessmentCategoryId,
   responses: Readonly<Record<string, AssessmentResponse>>,
+  industry: Industry = DEFAULT_INDUSTRY,
 ): CategoryScore => {
-  const questions = ASSESSMENT_QUESTIONS.filter((question) => question.categoryId === categoryId);
+  const questions = questionsForIndustry(industry).filter((question) => question.categoryId === categoryId);
   let weighted = 0;
   let weight = 0;
   let answered = 0;
@@ -108,8 +111,9 @@ const severityFor = (score: number, critical: boolean): RiskLevel => {
 
 export const summariseAssessment = (
   responses: Readonly<Record<string, AssessmentResponse>>,
+  industry: Industry = DEFAULT_INDUSTRY,
 ): AssessmentSummary => {
-  const categories = ASSESSMENT_CATEGORIES.map((category) => scoreCategory(category.id, responses));
+  const categories = ASSESSMENT_CATEGORIES.map((category) => scoreCategory(category.id, responses, industry));
 
   const totalWeight = ASSESSMENT_CATEGORIES.reduce((total, category) => total + category.weight, 0);
   const overall = Math.round(
@@ -119,7 +123,7 @@ export const summariseAssessment = (
     }, 0) / totalWeight,
   );
 
-  const totalQuestions = ASSESSMENT_QUESTIONS.length;
+  const totalQuestions = questionsForIndustry(industry).length;
   const answeredQuestions = categories.reduce((total, category) => total + category.answered, 0);
   const completion = Math.round((answeredQuestions / totalQuestions) * 100);
 
