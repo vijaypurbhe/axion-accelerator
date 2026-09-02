@@ -3,7 +3,7 @@
  * Hierarchy: Tenant/Client -> Program/Initiative -> Domain/Workstream -> Use Case -> Release/Version
  */
 
-export type Industry = "BFSI" | "HLS" | "RCPG";
+export type Industry = "BFSI" | "MFG" | "AUTO" | "HLS" | "RCPG";
 
 export type PersonaId =
   | "executive-sponsor"
@@ -52,6 +52,10 @@ export type SalesforceProductId =
   | "service-cloud"
   | "marketing-cloud"
   | "financial-services-cloud"
+  | "manufacturing-cloud"
+  | "automotive-cloud"
+  | "field-service"
+  | "revenue-cloud"
   | "health-cloud"
   | "consumer-goods-cloud"
   | "loyalty-management"
@@ -81,7 +85,17 @@ export type SourcePlatformId =
   | "oracle"
   | "core-banking"
   | "commerce"
-  | "loyalty";
+  | "loyalty"
+  | "mes"
+  | "scada-historian"
+  | "plm"
+  | "eam-cmms"
+  | "iot-platform"
+  | "telematics"
+  | "dealer-management"
+  | "warranty"
+  | "parts-catalog"
+  | "supplier-portal";
 
 export type IngestionPattern = "physical" | "zero-copy" | "cached-acceleration" | "streaming";
 
