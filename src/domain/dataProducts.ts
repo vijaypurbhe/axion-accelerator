@@ -11,6 +11,8 @@ import type { RoleId } from "@/domain/models";
 export type DataProductCategory =
   | "common"
   | "bfsi"
+  | "mfg"
+  | "auto"
   | "custom"
   | "hls"
   | "rcpg";

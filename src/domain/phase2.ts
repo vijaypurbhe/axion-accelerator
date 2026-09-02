@@ -171,7 +171,7 @@ export interface AssessmentQuestion {
   readonly owner: RoleId;
   readonly guidance?: string;
   readonly evidenceRequired: boolean;
-  readonly applicability: "all" | "bfsi" | "agentforce";
+  readonly applicability: IndustryApplicability;
   /** Numeric questions only. */
   readonly max?: number;
 }
