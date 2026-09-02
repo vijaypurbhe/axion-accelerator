@@ -20,6 +20,8 @@ import type { RoleId } from "@/domain/models";
  * client-specific products are created in the mock store from these blueprints.
  */
 
+import { MFG_AUTO_PRODUCTS } from "./dataProductPacksMfgAuto";
+
 const SEED_DATE = "2026-01-12T09:00:00.000Z";
 
 const slug = (value: string) =>
@@ -57,7 +59,7 @@ const audit = {
   updatedAt: SEED_DATE,
 };
 
-interface ProductSpec {
+export interface ProductSpec {
   id: string;
   name: string;
   description: string;
@@ -163,7 +165,15 @@ const buildProduct = (spec: ProductSpec): DataProduct => {
     businessPurpose: spec.businessPurpose,
     category: spec.category,
     domain: spec.domain,
-    industry: spec.industry ?? (spec.category === "bfsi" ? "BFSI" : "cross-industry"),
+    industry:
+      spec.industry ??
+      (spec.category === "bfsi"
+        ? "BFSI"
+        : spec.category === "mfg"
+          ? "MFG"
+          : spec.category === "auto"
+            ? "AUTO"
+            : "cross-industry"),
     businessOwnerRole: spec.businessOwnerRole ?? "data-steward",
     technicalOwnerRole: spec.technicalOwnerRole ?? "data360-architect",
     isTemplate: true,
@@ -1516,7 +1526,20 @@ const EXTENSIONS: ProductSpec[] = [
   },
 ];
 
-export const DATA_PRODUCT_TEMPLATES: readonly DataProduct[] = [...COMMON, ...BFSI, ...EXTENSIONS].map(buildProduct);
+export const DATA_PRODUCT_TEMPLATES: readonly DataProduct[] = [
+  ...COMMON,
+  ...BFSI,
+  ...MFG_AUTO_PRODUCTS,
+  ...EXTENSIONS,
+].map(buildProduct);
+
+/** Templates in scope for a vertical: cross-industry plus the matching industry pack. */
+export const templatesForIndustry = (industry: Industry | undefined): readonly DataProduct[] =>
+  DATA_PRODUCT_TEMPLATES.filter((product) => {
+    if (product.industry === "cross-industry") return true;
+    if (industry === "AUTO") return product.industry === "AUTO" || product.industry === "MFG";
+    return product.industry === industry;
+  });
 
 export const getTemplate = (id: string): DataProduct | undefined =>
   DATA_PRODUCT_TEMPLATES.find((product) => product.id === id);
