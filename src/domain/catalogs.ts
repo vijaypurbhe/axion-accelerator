@@ -121,22 +121,30 @@ export const getPersona = (id: string): Persona | undefined => PERSONAS.find((p)
 
 export const INDUSTRIES: readonly { id: Industry; name: string; enabled: boolean; note: string }[] = [
   { id: "BFSI", name: "Banking, Financial Services & Insurance", enabled: true, note: "Initial release industry." },
+  { id: "MFG", name: "Manufacturing & Industrial", enabled: true, note: "Discrete, process, industrial equipment and aftermarket." },
+  { id: "AUTO", name: "Automotive & Mobility", enabled: true, note: "OEM, supplier, dealer network, captive finance and mobility services." },
   { id: "HLS", name: "Healthcare & Life Sciences", enabled: false, note: "Planned expansion." },
   { id: "RCPG", name: "Retail & Consumer Packaged Goods", enabled: false, note: "Planned expansion." },
 ] as const;
 
+const ALL_INDUSTRIES: readonly Industry[] = ["BFSI", "MFG", "AUTO", "HLS", "RCPG"];
+
 export const SALESFORCE_PRODUCTS: readonly SalesforceProduct[] = [
-  { id: "data-360", name: "Data 360 / Data Cloud", category: "data", industries: ["BFSI", "HLS", "RCPG"] },
-  { id: "agentforce", name: "Agentforce", category: "agent", industries: ["BFSI", "HLS", "RCPG"] },
-  { id: "sales-cloud", name: "Sales Cloud", category: "crm", industries: ["BFSI", "HLS", "RCPG"] },
-  { id: "service-cloud", name: "Service Cloud", category: "crm", industries: ["BFSI", "HLS", "RCPG"] },
-  { id: "marketing-cloud", name: "Marketing Cloud", category: "engagement", industries: ["BFSI", "HLS", "RCPG"] },
+  { id: "data-360", name: "Data 360 / Data Cloud", category: "data", industries: ALL_INDUSTRIES },
+  { id: "agentforce", name: "Agentforce", category: "agent", industries: ALL_INDUSTRIES },
+  { id: "sales-cloud", name: "Sales Cloud", category: "crm", industries: ALL_INDUSTRIES },
+  { id: "service-cloud", name: "Service Cloud", category: "crm", industries: ALL_INDUSTRIES },
+  { id: "marketing-cloud", name: "Marketing Cloud", category: "engagement", industries: ALL_INDUSTRIES },
   { id: "financial-services-cloud", name: "Financial Services Cloud", category: "crm", industries: ["BFSI"] },
+  { id: "manufacturing-cloud", name: "Manufacturing Cloud", category: "crm", industries: ["MFG", "AUTO"] },
+  { id: "automotive-cloud", name: "Automotive Cloud", category: "crm", industries: ["AUTO"] },
+  { id: "field-service", name: "Field Service", category: "crm", industries: ["MFG", "AUTO", "BFSI"] },
+  { id: "revenue-cloud", name: "Revenue Cloud", category: "crm", industries: ["MFG", "AUTO"] },
   { id: "health-cloud", name: "Health Cloud", category: "crm", industries: ["HLS"] },
   { id: "consumer-goods-cloud", name: "Consumer Goods Cloud", category: "crm", industries: ["RCPG"] },
-  { id: "loyalty-management", name: "Loyalty Management", category: "engagement", industries: ["RCPG", "BFSI"] },
-  { id: "tableau", name: "Tableau", category: "analytics", industries: ["BFSI", "HLS", "RCPG"] },
-  { id: "shield", name: "Salesforce Shield", category: "security", industries: ["BFSI", "HLS", "RCPG"] },
+  { id: "loyalty-management", name: "Loyalty Management", category: "engagement", industries: ["RCPG", "BFSI", "AUTO"] },
+  { id: "tableau", name: "Tableau", category: "analytics", industries: ALL_INDUSTRIES },
+  { id: "shield", name: "Salesforce Shield", category: "security", industries: ALL_INDUSTRIES },
 ] as const;
 
 export const getProduct = (id: string): SalesforceProduct | undefined =>
@@ -161,6 +169,16 @@ export const SOURCE_PLATFORMS: readonly SourcePlatform[] = [
   { id: "core-banking", name: "Core Banking Platforms", category: "industry", supportedPatterns: ["physical", "streaming"] },
   { id: "commerce", name: "Commerce Platforms", category: "engagement", supportedPatterns: ["physical", "streaming"] },
   { id: "loyalty", name: "Loyalty Platforms", category: "engagement", supportedPatterns: ["physical", "cached-acceleration"] },
+  { id: "mes", name: "MES / Shop-floor Execution", category: "industry", supportedPatterns: ["physical", "streaming"] },
+  { id: "scada-historian", name: "SCADA / Process Historian", category: "industry", supportedPatterns: ["streaming", "physical"] },
+  { id: "plm", name: "PLM (product lifecycle / BOM)", category: "industry", supportedPatterns: ["physical", "zero-copy"] },
+  { id: "eam-cmms", name: "EAM / CMMS (asset maintenance)", category: "industry", supportedPatterns: ["physical"] },
+  { id: "iot-platform", name: "Industrial IoT Platform", category: "industry", supportedPatterns: ["streaming", "zero-copy", "cached-acceleration"] },
+  { id: "telematics", name: "Connected Vehicle / Telematics", category: "industry", supportedPatterns: ["streaming", "zero-copy", "cached-acceleration"] },
+  { id: "dealer-management", name: "Dealer Management System (DMS)", category: "industry", supportedPatterns: ["physical", "streaming"] },
+  { id: "warranty", name: "Warranty & Claims Platform", category: "industry", supportedPatterns: ["physical"] },
+  { id: "parts-catalog", name: "Parts & Aftermarket Catalog", category: "industry", supportedPatterns: ["physical", "cached-acceleration"] },
+  { id: "supplier-portal", name: "Supplier Collaboration Portal", category: "industry", supportedPatterns: ["physical"] },
 ] as const;
 
 export const PLATFORM_CONCEPTS: readonly PlatformConcept[] = [
