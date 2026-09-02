@@ -5,6 +5,7 @@
  */
 
 import type { IngestionPattern, LifecycleStageId, MaturityLevel, SalesforceProductId } from "./types";
+import type { IndustryApplicability } from "./industries";
 import type { ApprovalState, RiskLevel, RoleId } from "./models";
 
 /* ============================== Lifecycle manager ============================= */

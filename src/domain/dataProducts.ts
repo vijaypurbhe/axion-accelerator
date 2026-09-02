@@ -41,7 +41,21 @@ export type DataDomain =
   | "compliance"
   | "org"
   | "location"
-  | "workforce";
+  | "workforce"
+  /* manufacturing & automotive domains */
+  | "asset"
+  | "bom"
+  | "supplier"
+  | "order"
+  | "production"
+  | "quality"
+  | "service"
+  | "parts"
+  | "vehicle"
+  | "dealer"
+  | "warranty"
+  | "telemetry"
+  | "finance";
 
 export type Sensitivity = "public" | "internal" | "confidential" | "restricted" | "pii" | "financial-pii";
 
