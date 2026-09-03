@@ -1,4 +1,5 @@
 import { CLIENT_NORTHSTAR, INITIATIVE_C360 } from "@/data/bfsiSeed";
+import { activeIndustry } from "@/repositories/mock/simulationScope";
 import type {
   ApplicabilityProfile,
   GovernanceBody,
