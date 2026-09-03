@@ -106,7 +106,7 @@ const LoginPage = () => {
           </h1>
           <p className="text-base leading-relaxed text-muted-foreground">
             Axion combines advisory readiness assessment, an architecture and configuration workbench, and a
-            deployment accelerator for Salesforce Data 360 and Agentforce — starting with BFSI.
+            deployment accelerator for Salesforce Data 360 and Agentforce — across BFSI, Manufacturing, Automotive, and beyond.
           </p>
 
           <div className="flex flex-wrap gap-1.5">
@@ -123,9 +123,9 @@ const LoginPage = () => {
 
           <div className="grid gap-3 sm:grid-cols-3">
             {[
-              { value: "30+", label: "BFSI canonical data products" },
+              { value: "30+", label: "Industry canonical data products" },
               { value: "24", label: "Trust layer controls" },
-              { value: "10", label: "Source platform connectors" },
+              { value: "10+", label: "Source platform connectors" },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -135,6 +135,20 @@ const LoginPage = () => {
                 <p className="mt-1 text-xs leading-snug text-muted-foreground">{stat.label}</p>
               </div>
             ))}
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {ENABLED_INDUSTRY_PACKS.map((pack) => (
+              <span
+                key={pack.id}
+                className="rounded-full border border-border bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground backdrop-blur"
+              >
+                {pack.shortName}
+              </span>
+            ))}
+            <span className="rounded-full border border-dashed border-border bg-background/50 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
+              HLS · RCPG
+            </span>
           </div>
 
           <ul className="grid gap-2 text-sm text-muted-foreground">
