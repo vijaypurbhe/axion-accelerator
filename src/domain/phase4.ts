@@ -1,4 +1,5 @@
 import type { RoleId } from "@/domain/models";
+import type { Industry } from "@/domain/types";
 import type { IngestionPatternId } from "@/domain/dataProducts";
 
 /**
