@@ -530,7 +530,7 @@ export const seedRisks = (): RiskEntry[] => [
 /* ============================ Applicability profile ========================== */
 
 /** Vertical overlays for the applicability answers — the shared answers stay industry neutral. */
-const APPLICABILITY_BY_INDUSTRY: Record<string, Record<ApplicabilityFactorId, readonly string[]>> = {
+const APPLICABILITY_BY_INDUSTRY: Record<string, Partial<Record<ApplicabilityFactorId, readonly string[]>>> = {
   BFSI: {
     industry: ["BFSI"],
     jurisdiction: ["us", "canada"],
@@ -557,7 +557,8 @@ const APPLICABILITY_BY_INDUSTRY: Record<string, Record<ApplicabilityFactorId, re
 export const seedApplicabilityProfile = (industry: string = activeIndustry()): ApplicabilityProfile => ({
   initiativeId: INITIATIVE_C360,
   answers: {
-    ...(APPLICABILITY_BY_INDUSTRY[industry] ?? APPLICABILITY_BY_INDUSTRY.BFSI),
+    ...(APPLICABILITY_BY_INDUSTRY.BFSI as Record<ApplicabilityFactorId, readonly string[]>),
+    ...(APPLICABILITY_BY_INDUSTRY[industry] ?? {}),
     "identity-design": ["probabilistic"],
     "agent-capabilities": ["answer", "summarise", "recommend"],
     "external-actions": ["read"],
