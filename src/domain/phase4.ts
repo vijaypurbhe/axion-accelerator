@@ -539,6 +539,12 @@ export const SURVIVORSHIP_LABELS: Record<SurvivorshipStrategy, string> = {
 };
 
 export const NORMALIZATION_LABELS: Record<NormalizationType, string> = {
+  "serial-number": "Serial number",
+  "part-number": "Part number",
+  "site-code": "Site / dealer code",
+  vin: "VIN",
+  "license-plate": "License plate",
+  "device-id": "Device identifier",
   name: "Name",
   address: "Address",
   email: "Email",

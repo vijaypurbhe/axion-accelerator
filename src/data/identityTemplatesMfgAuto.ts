@@ -85,7 +85,7 @@ const IDENTIFIER_NORMALIZATION: readonly NormalizationRule[] = [
 
 const VEHICLE_NORMALIZATION: readonly NormalizationRule[] = [
   norm("nz-vin", "vin", "vin", "17-character VIN with mixed case", "Upper case, I/O/Q rejected, checksum validated", 1, {
-    nullHandling: "reject",
+    nullHandling: "flag-exception",
   }),
   norm("nz-plate", "licensePlate", "license-plate", "Regional plate formats", "Upper case, spaces removed, region retained", 2),
   norm("nz-name-auto", "fullName", "name", "Mixed case with titles", "Upper case, titles removed", 3),
