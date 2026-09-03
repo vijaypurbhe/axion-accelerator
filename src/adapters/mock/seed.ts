@@ -25,6 +25,22 @@ export const seedTenants: Tenant[] = [
     segment: "Insurance carrier",
     createdAt: "2026-04-02T09:00:00Z",
   },
+  {
+    id: "cli-helios",
+    name: "Helios Industrial Systems",
+    industry: "MFG",
+    region: "North America",
+    segment: "Industrial equipment manufacturer",
+    createdAt: "2026-05-14T09:00:00Z",
+  },
+  {
+    id: "cli-verdant",
+    name: "Verdant Motors",
+    industry: "AUTO",
+    region: "EMEA",
+    segment: "Automotive OEM",
+    createdAt: "2026-06-09T09:00:00Z",
+  },
 ];
 
 export const seedPrograms: Program[] = [
@@ -60,6 +76,28 @@ export const seedPrograms: Program[] = [
     currentStage: "discover",
     startDate: "2026-07-01T00:00:00Z",
     targetGoLive: "2027-06-30T00:00:00Z",
+  },
+  {
+    id: "prg-hs-installed-base",
+    tenantId: "cli-helios",
+    name: "Connected Installed Base Foundation",
+    objective: "Unify serial, asset, supplier and telemetry data to power service and aftermarket revenue.",
+    executiveSponsor: "Chief Operations Officer",
+    status: "not-started",
+    currentStage: "discover",
+    startDate: "2026-06-15T00:00:00Z",
+    targetGoLive: "2027-05-31T00:00:00Z",
+  },
+  {
+    id: "prg-vm-owner-360",
+    tenantId: "cli-verdant",
+    name: "Vehicle & Owner 360",
+    objective: "Resolve VIN, owner and dealer data into a consented profile for service, recall and connected experiences.",
+    executiveSponsor: "Chief Customer Officer",
+    status: "not-started",
+    currentStage: "discover",
+    startDate: "2026-07-15T00:00:00Z",
+    targetGoLive: "2027-08-31T00:00:00Z",
   },
 ];
 
