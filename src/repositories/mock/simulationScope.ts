@@ -8,7 +8,17 @@
  */
 
 let simulation = false;
+let activeIndustryScope = "BFSI";
 const listeners = new Set<() => void>();
+
+/** Vertical of the active workspace, so seed builders can pick the right content pack. */
+export const activeIndustry = (): string => activeIndustryScope;
+
+export const setActiveIndustry = (value: string) => {
+  if (activeIndustryScope === value) return;
+  activeIndustryScope = value;
+  for (const listener of listeners) listener();
+};
 
 export const isSimulationScope = (): boolean => simulation;
 

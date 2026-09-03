@@ -527,14 +527,35 @@ export const seedRisks = (): RiskEntry[] => [
 
 /* ============================ Applicability profile ========================== */
 
-export const seedApplicabilityProfile = (): ApplicabilityProfile => ({
-  initiativeId: INITIATIVE_C360,
-  answers: {
+/** Vertical overlays for the applicability answers — the shared answers stay industry neutral. */
+const APPLICABILITY_BY_INDUSTRY: Record<string, Record<string, readonly string[]>> = {
+  BFSI: {
     industry: ["BFSI"],
     jurisdiction: ["us", "canada"],
     "use-case": ["service", "sales", "onboarding"],
     "data-classification": ["financial-pii"],
     "source-systems": ["salesforce", "core-banking", "snowflake", "third-party-data"],
+  },
+  MFG: {
+    industry: ["MFG"],
+    jurisdiction: ["us", "eu"],
+    "use-case": ["service", "sales", "analytics"],
+    "data-classification": ["confidential"],
+    "source-systems": ["salesforce", "erp", "mes", "plm", "iot-platform", "supplier-portal"],
+  },
+  AUTO: {
+    industry: ["AUTO"],
+    jurisdiction: ["us", "eu"],
+    "use-case": ["service", "sales", "marketing"],
+    "data-classification": ["pii", "confidential"],
+    "source-systems": ["salesforce", "dealer-management", "telematics", "warranty", "parts-catalog"],
+  },
+};
+
+export const seedApplicabilityProfile = (industry: string = activeIndustry()): ApplicabilityProfile => ({
+  initiativeId: INITIATIVE_C360,
+  answers: {
+    ...(APPLICABILITY_BY_INDUSTRY[industry] ?? APPLICABILITY_BY_INDUSTRY.BFSI),
     "identity-design": ["probabilistic"],
     "agent-capabilities": ["answer", "summarise", "recommend"],
     "external-actions": ["read"],
