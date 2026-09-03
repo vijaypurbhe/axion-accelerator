@@ -21,7 +21,7 @@ type Mode = "sign-in" | "sign-up" | "forgot";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { signIn, signUp, signInWithGoogle, requestPasswordReset } = useAxion();
+  const { signIn, signUp, requestPasswordReset } = useAxion();
   const [mode, setMode] = useState<Mode>("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
