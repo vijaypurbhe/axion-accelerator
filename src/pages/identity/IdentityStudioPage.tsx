@@ -15,7 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Drawer, Modal } from "@/components/enterprise/Overlays";
 import { useToast } from "@/hooks/use-toast";
-import { IDENTITY_TEMPLATES, SAMPLE_SETS } from "@/data/identityTemplates";
+import { identityTemplatesForIndustry, SAMPLE_SETS } from "@/data/identityTemplates";
+import { useActiveIndustry } from "@/hooks/useIndustry";
 import {
   ENTITY_LABELS,
   EXCEPTION_ACTION_LABELS,
@@ -747,10 +748,10 @@ const IdentityStudioPage = () => {
         open={templateSheetOpen}
         onOpenChange={setTemplateSheetOpen}
         title="New identity policy from template"
-        description="BFSI-tuned templates seed normalization, match and survivorship rules that stewards can then tailor."
+        description={`${pack.shortName} templates seed normalization, match and survivorship rules that stewards can then tailor.`}
       >
         <div className="space-y-3">
-          {IDENTITY_TEMPLATES.map((template) => (
+          {industryTemplates.map((template) => (
             <button
               key={template.id}
               type="button"
