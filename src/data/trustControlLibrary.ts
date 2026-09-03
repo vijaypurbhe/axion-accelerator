@@ -536,7 +536,7 @@ export const CONTROL_LIBRARY: readonly ControlDefinition[] = [
     testingProcedure: "Confirm each in-scope component appears in the log platform with events in the last 24 hours.",
     critical: false,
     stageGate: "configure",
-    triggers: [{ factor: "industry", values: ["BFSI", "HLS", "RCPG"], rationale: "Baseline control for all initiatives." }],
+    triggers: [{ factor: "industry", values: ["BFSI", "MFG", "AUTO", "HLS", "RCPG"], rationale: "Baseline control for all initiatives." }],
   }),
   ctrl({
     id: "TLC-012",
@@ -707,7 +707,7 @@ export const CONTROL_LIBRARY: readonly ControlDefinition[] = [
     testingProcedure: "Select three data products and confirm records beyond the retention period are no longer present.",
     critical: false,
     stageGate: "deploy",
-    triggers: [{ factor: "industry", values: ["BFSI", "HLS", "RCPG"], rationale: "Retention applies to every initiative." }],
+    triggers: [{ factor: "industry", values: ["BFSI", "MFG", "AUTO", "HLS", "RCPG"], rationale: "Retention applies to every initiative." }],
   }),
   ctrl({
     id: "TLC-018",
@@ -795,7 +795,7 @@ export const CONTROL_LIBRARY: readonly ControlDefinition[] = [
     testingProcedure: "Run a tabletop covering an unsafe agent response and confirm kill switch and notification steps operate.",
     critical: false,
     stageGate: "deploy",
-    triggers: [{ factor: "industry", values: ["BFSI", "HLS", "RCPG"], rationale: "Baseline operational control." }],
+    triggers: [{ factor: "industry", values: ["BFSI", "MFG", "AUTO", "HLS", "RCPG"], rationale: "Baseline operational control." }],
   }),
   ctrl({
     id: "TLC-021",
