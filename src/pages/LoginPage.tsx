@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { useAxion } from "@/context/AxionContext";
 import { PERSONAS } from "@/domain/catalogs";
+import { ENABLED_INDUSTRY_PACKS } from "@/domain/industries";
 import { config } from "@/config";
 import type { PersonaId } from "@/domain/types";
 
