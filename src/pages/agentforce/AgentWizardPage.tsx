@@ -17,6 +17,7 @@ import { PageHeader, SectionCard, KeyValue } from "@/components/enterprise/Layou
 import { MetaPill } from "@/components/enterprise/Badges";
 import { useToast } from "@/hooks/use-toast";
 import { AGENT_PATTERNS } from "@/data/agentforceSeed";
+import { useAgentPatterns } from "@/hooks/usePhase6";
 import { PERSONAS } from "@/domain/catalogs";
 import {
   AGENT_CHANNELS,
@@ -61,6 +62,7 @@ const AgentWizardPage = () => {
     owner: "agentforce-architect",
   });
 
+  const patterns = useAgentPatterns();
   const pattern = AGENT_PATTERNS.find((p) => p.id === form.patternId);
   const set = <K extends keyof NewAgentInput>(key: K, value: NewAgentInput[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -123,7 +125,7 @@ const AgentWizardPage = () => {
       {step === 0 ? (
         <SectionCard title="Implementation pattern" description="Patterns pre-seed suggested topics, actions and guardrail categories.">
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {AGENT_PATTERNS.map((item) => (
+            {patterns.map((item) => (
               <button
                 type="button"
                 key={item.id}

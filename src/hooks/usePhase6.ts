@@ -13,6 +13,7 @@ import {
   generateAgentSuggestions,
 } from "@/services/agentforceEngine";
 import { AGENT_PATTERNS, defaultConsumption, defaultInstructions } from "@/data/agentforceSeed";
+import { useActiveIndustry } from "@/hooks/useIndustry";
 import { INITIATIVE_C360 } from "@/data/bfsiSeed";
 import type {
   AgentDesignRecord,
@@ -82,7 +83,14 @@ export const useSuggestionDecisions = (agentId: string | undefined) =>
     enabled: Boolean(agentId),
   });
 
-export const useAgentPatterns = () => AGENT_PATTERNS;
+/** Patterns for the active vertical; untagged patterns are cross-industry. */
+export const useAgentPatterns = () => {
+  const { industry } = useActiveIndustry();
+  return useMemo(
+    () => AGENT_PATTERNS.filter((pattern) => pattern.industries.length === 0 || pattern.industries.includes(industry)),
+    [industry],
+  );
+};
 
 /* ------------------------------ derived views ------------------------------ */
 
