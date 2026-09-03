@@ -184,7 +184,13 @@ export type NormalizationType =
   | "account-id"
   | "business-id"
   | "date-of-birth"
-  | "organization-name";
+  | "organization-name"
+  | "serial-number"
+  | "part-number"
+  | "site-code"
+  | "vin"
+  | "license-plate"
+  | "device-id";
 
 export type NullHandling = "ignore" | "treat-as-blank" | "block-match" | "flag-exception";
 
@@ -504,6 +510,10 @@ export const ENTITY_LABELS: Record<IdentityEntity, string> = {
   business: "Business identity",
   "account-relationship": "Account relationship",
   "advisor-relationship": "Advisor / banker relationship",
+  asset: "Asset / installed base",
+  vehicle: "Vehicle identity",
+  supplier: "Supplier & site identity",
+  "dealer-relationship": "Dealer / owner relationship",
 };
 
 export const MATCH_KIND_LABELS: Record<MatchRuleKind, string> = {

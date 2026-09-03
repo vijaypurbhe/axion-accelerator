@@ -76,24 +76,24 @@ const surv = (
 ): SurvivorshipRule => ({ id, attribute, strategy, sourcePriority, notes });
 
 const IDENTIFIER_NORMALIZATION: readonly NormalizationRule[] = [
-  norm("nz-serial", "serialNumber", "identifier", "Mixed case with separators", "Upper case, separators removed", 1),
-  norm("nz-partnum", "partNumber", "identifier", "Vendor-specific formatting", "Upper case, leading zeros trimmed", 2),
-  norm("nz-site", "siteCode", "identifier", "Plant or site code variants", "Upper case canonical site code", 3),
-  norm("nz-org", "organizationName", "organization", "Legal suffixes and punctuation", "Upper case, suffixes standardised", 4),
+  norm("nz-serial", "serialNumber", "serial-number", "Mixed case with separators", "Upper case, separators removed", 1),
+  norm("nz-partnum", "partNumber", "part-number", "Vendor-specific formatting", "Upper case, leading zeros trimmed", 2),
+  norm("nz-site", "siteCode", "site-code", "Plant or site code variants", "Upper case canonical site code", 3),
+  norm("nz-org", "organizationName", "organization-name", "Legal suffixes and punctuation", "Upper case, suffixes standardised", 4),
   norm("nz-addr-mfg", "addressLine", "address", "Free-form address", "Standardised postal address", 5),
 ];
 
 const VEHICLE_NORMALIZATION: readonly NormalizationRule[] = [
-  norm("nz-vin", "vin", "identifier", "17-character VIN with mixed case", "Upper case, I/O/Q rejected, checksum validated", 1, {
+  norm("nz-vin", "vin", "vin", "17-character VIN with mixed case", "Upper case, I/O/Q rejected, checksum validated", 1, {
     nullHandling: "reject",
   }),
-  norm("nz-plate", "licensePlate", "identifier", "Regional plate formats", "Upper case, spaces removed, region retained", 2),
+  norm("nz-plate", "licensePlate", "license-plate", "Regional plate formats", "Upper case, spaces removed, region retained", 2),
   norm("nz-name-auto", "fullName", "name", "Mixed case with titles", "Upper case, titles removed", 3),
   norm("nz-email-auto", "email", "email", "Free-form email", "Lower case, plus-tags removed", 4, {
     nullHandling: "treat-as-blank",
   }),
   norm("nz-phone-auto", "phone", "phone", "Local and international formats", "E.164", 5),
-  norm("nz-dealer", "dealerCode", "identifier", "OEM dealer code variants", "Upper case canonical dealer code", 6),
+  norm("nz-dealer", "dealerCode", "site-code", "OEM dealer code variants", "Upper case canonical dealer code", 6),
 ];
 
 const MFG: readonly Industry[] = ["MFG"];
@@ -205,7 +205,7 @@ export const MFG_AUTO_IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
         fields: [
           { field: "vendorCode", comparison: "normalized-exact", weight: 45 },
           { field: "siteCode", comparison: "normalized-exact", weight: 25 },
-          { field: "addressLine", comparison: "address", weight: 30 },
+          { field: "addressLine", comparison: "fuzzy", weight: 30 },
         ],
         priority: 2,
         blocking: ["vendorCode"],
@@ -402,7 +402,7 @@ export const MFG_AUTO_IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
         fields: [
           { field: "lastName", comparison: "normalized-exact", weight: 30 },
           { field: "firstName", comparison: "phonetic", weight: 20 },
-          { field: "addressLine", comparison: "address", weight: 30 },
+          { field: "addressLine", comparison: "fuzzy", weight: 30 },
           { field: "postalCode", comparison: "normalized-exact", weight: 20 },
         ],
         priority: 2,
