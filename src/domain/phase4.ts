@@ -1,4 +1,5 @@
 import type { RoleId } from "@/domain/models";
+import type { Industry } from "@/domain/types";
 import type { IngestionPatternId } from "@/domain/dataProducts";
 
 /**
@@ -167,7 +168,11 @@ export type IdentityEntity =
   | "household"
   | "business"
   | "account-relationship"
-  | "advisor-relationship";
+  | "advisor-relationship"
+  | "asset"
+  | "vehicle"
+  | "supplier"
+  | "dealer-relationship";
 
 export type NormalizationType =
   | "name"
@@ -179,7 +184,13 @@ export type NormalizationType =
   | "account-id"
   | "business-id"
   | "date-of-birth"
-  | "organization-name";
+  | "organization-name"
+  | "serial-number"
+  | "part-number"
+  | "site-code"
+  | "vin"
+  | "license-plate"
+  | "device-id";
 
 export type NullHandling = "ignore" | "treat-as-blank" | "block-match" | "flag-exception";
 
@@ -281,6 +292,8 @@ export interface IdentityTemplate {
   readonly id: string;
   readonly name: string;
   readonly entity: IdentityEntity;
+  /** Verticals the template is written for. Omitted means cross-industry. */
+  readonly industries?: readonly Industry[];
   readonly description: string;
   readonly useCases: readonly string[];
   readonly normalizationRules: readonly NormalizationRule[];
@@ -497,6 +510,10 @@ export const ENTITY_LABELS: Record<IdentityEntity, string> = {
   business: "Business identity",
   "account-relationship": "Account relationship",
   "advisor-relationship": "Advisor / banker relationship",
+  asset: "Asset / installed base",
+  vehicle: "Vehicle identity",
+  supplier: "Supplier & site identity",
+  "dealer-relationship": "Dealer / owner relationship",
 };
 
 export const MATCH_KIND_LABELS: Record<MatchRuleKind, string> = {
@@ -522,6 +539,12 @@ export const SURVIVORSHIP_LABELS: Record<SurvivorshipStrategy, string> = {
 };
 
 export const NORMALIZATION_LABELS: Record<NormalizationType, string> = {
+  "serial-number": "Serial number",
+  "part-number": "Part number",
+  "site-code": "Site / dealer code",
+  vin: "VIN",
+  "license-plate": "License plate",
+  "device-id": "Device identifier",
   name: "Name",
   address: "Address",
   email: "Email",

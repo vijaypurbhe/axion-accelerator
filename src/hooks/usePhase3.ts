@@ -10,6 +10,7 @@ import {
 } from "@/services/phase3";
 import { useActiveInitiativeId } from "@/hooks/usePhase2";
 import type { RoleId } from "@/domain/models";
+import { useActiveIndustry } from "@/hooks/useIndustry";
 import type {
   DataAiSuggestion,
   DataProduct,
@@ -58,8 +59,21 @@ const useInvalidatePhase3 = () => {
 
 /* ------------------------------- data products ------------------------------ */
 
-export const useDataProductTemplates = () =>
-  useQuery({ queryKey: ["data-product-templates"], queryFn: () => dataProductService.listTemplates() });
+/** Templates scoped to the active client's vertical (cross-industry templates always included). */
+export const useDataProductTemplates = () => {
+  const { industry } = useActiveIndustry();
+  return useQuery({
+    queryKey: ["data-product-templates", industry],
+    queryFn: async () => {
+      const all = await dataProductService.listTemplates();
+      return all.filter((product) => {
+        if (product.industry === "cross-industry") return true;
+        if (industry === "AUTO") return product.industry === "AUTO" || product.industry === "MFG";
+        return product.industry === industry;
+      });
+    },
+  });
+};
 
 export const useDataProducts = (initiativeId: string) =>
   useQuery({ queryKey: ["data-products", initiativeId], queryFn: () => dataProductService.list(initiativeId) });

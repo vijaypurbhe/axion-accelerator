@@ -6,6 +6,10 @@ import type {
   SampleRecordSet,
   SurvivorshipRule,
 } from "@/domain/phase4";
+import type { Industry } from "@/domain/types";
+import { MFG_AUTO_IDENTITY_TEMPLATES } from "@/data/identityTemplatesMfgAuto";
+
+const BFSI_ONLY: readonly Industry[] = ["BFSI"];
 
 /**
  * BFSI identity resolution templates plus seeded sample data for the simulation workbench.
@@ -106,6 +110,7 @@ const ACCOUNT_NORMALIZATION: readonly NormalizationRule[] = [
 export const IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
   {
     id: "tpl-retail-customer",
+    industries: BFSI_ONLY,
     name: "Retail customer identity",
     entity: "individual",
     description:
@@ -199,6 +204,7 @@ export const IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
   },
   {
     id: "tpl-household",
+    industries: BFSI_ONLY,
     name: "Household resolution",
     entity: "household",
     description: "Groups resolved individuals into households using normalised address and surname evidence.",
@@ -253,6 +259,7 @@ export const IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
   },
   {
     id: "tpl-business",
+    industries: BFSI_ONLY,
     name: "Commercial customer / business entity",
     entity: "business",
     description: "Resolves commercial customers across CRM, core banking and registry sources.",
@@ -309,6 +316,7 @@ export const IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
   },
   {
     id: "tpl-beneficial-owner",
+    industries: BFSI_ONLY,
     name: "Beneficial ownership",
     entity: "business",
     description: "Links individuals to controlling interests in commercial entities for KYC and AML obligations.",
@@ -340,6 +348,7 @@ export const IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
   },
   {
     id: "tpl-banker-relationship",
+    industries: BFSI_ONLY,
     name: "Banker / customer relationship",
     entity: "advisor-relationship",
     description: "Resolves relationship-manager coverage across CRM and servicing systems.",
@@ -368,6 +377,7 @@ export const IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
   },
   {
     id: "tpl-account-relationship",
+    industries: BFSI_ONLY,
     name: "Account / customer relationship",
     entity: "account-relationship",
     description: "Associates accounts with resolved customers, preserving ownership role.",
@@ -396,6 +406,7 @@ export const IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
   },
   {
     id: "tpl-joint-holders",
+    industries: BFSI_ONLY,
     name: "Joint account holders",
     entity: "account-relationship",
     description: "Handles multi-holder accounts without collapsing the holders into one profile.",
@@ -425,6 +436,7 @@ export const IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
   },
   {
     id: "tpl-cross-lob",
+    industries: BFSI_ONLY,
     name: "Customer across multiple lines of business",
     entity: "individual",
     description: "Reconciles the same customer held in retail, wealth and insurance books.",
@@ -457,6 +469,7 @@ export const IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
   },
   {
     id: "tpl-kyc-reconciliation",
+    industries: BFSI_ONLY,
     name: "KYC identity reconciliation",
     entity: "individual",
     description: "Reconciles KYC records against operational identity, raising exceptions on any divergence.",
@@ -486,7 +499,12 @@ export const IDENTITY_TEMPLATES: readonly IdentityTemplate[] = [
     ],
     reconciliationNotes: "Any divergence between KYC and operational identity creates a steward exception.",
   },
+  ...MFG_AUTO_IDENTITY_TEMPLATES,
 ];
+
+/** Templates available for a vertical. Untagged templates are cross-industry. */
+export const identityTemplatesForIndustry = (industry: Industry): readonly IdentityTemplate[] =>
+  IDENTITY_TEMPLATES.filter((template) => !template.industries || template.industries.includes(industry));
 
 export const getIdentityTemplate = (id: string): IdentityTemplate | undefined =>
   IDENTITY_TEMPLATES.find((template) => template.id === id);

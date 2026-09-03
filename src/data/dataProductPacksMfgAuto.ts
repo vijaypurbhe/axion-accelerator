@@ -679,7 +679,7 @@ export const AUTO_PRODUCTS: ProductSpec[] = [
     ],
     identifiers: [
       { name: "Ownership key", kind: "primary", attributeIds: ["ownership-id"], description: "Primary key.", identityRelevant: false },
-      { name: "Vehicle-party pair", kind: "composite", attributeIds: ["vehicle-id", "party-id"], description: "Used to reconcile duplicate ownership assertions across DMS feeds.", identityRelevant: true },
+      { name: "Vehicle-party pair", kind: "match", attributeIds: ["vehicle-id", "party-id"], description: "Used to reconcile duplicate ownership assertions across DMS feeds.", identityRelevant: true },
     ],
     relationships: [
       { name: "Owned vehicle", targetProductId: "dp-auto-vehicle", cardinality: "M:1", description: "Vehicle." },

@@ -1,8 +1,9 @@
 import { DEFAULT_WEIGHTS } from "@/data/connectivityCatalog";
 import { DATA_PRODUCT_TEMPLATES } from "@/data/dataProductLibrary";
-import { IDENTITY_TEMPLATES } from "@/data/identityTemplates";
+import { identityTemplatesForIndustry, IDENTITY_TEMPLATES } from "@/data/identityTemplates";
 import { INITIATIVE_C360, CLIENT_NORTHSTAR } from "@/data/bfsiSeed";
 import type { RoleId } from "@/domain/models";
+import type { Industry } from "@/domain/types";
 import type {
   ConnectivityAssessment,
   ConnectivityDecision,
@@ -19,7 +20,7 @@ import type {
 
 /** Phase 4 mock persistence. Mirrors the Phase 2/3 store pattern so a live adapter can replace it. */
 
-import { createScopedStore, isSimulationScope, scopedKey } from "./simulationScope";
+import { activeIndustry, createScopedStore, isSimulationScope, scopedKey } from "./simulationScope";
 
 const STORE_KEY = "axion.phase4.v1";
 const LATENCY = 110;
@@ -250,10 +251,14 @@ const seedSuggestions = (policyId: string): IdentityAiSuggestion[] => [
 ];
 
 const seed = (): Phase4Store => {
+  // Seed the first three templates for the active vertical so simulation workspaces
+  // always open with policies that match the client's industry.
+  const templates = identityTemplatesForIndustry(activeIndustry() as Industry);
+  const pool = templates.length >= 3 ? templates : IDENTITY_TEMPLATES;
   const identityPolicies = [
-    fromTemplate(IDENTITY_TEMPLATES[0], INITIATIVE_C360),
-    fromTemplate(IDENTITY_TEMPLATES[1], INITIATIVE_C360),
-    fromTemplate(IDENTITY_TEMPLATES[2], INITIATIVE_C360),
+    fromTemplate(pool[0], INITIATIVE_C360),
+    fromTemplate(pool[1], INITIATIVE_C360),
+    fromTemplate(pool[2], INITIATIVE_C360),
   ];
   return {
     policies: [

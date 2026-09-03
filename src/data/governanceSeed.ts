@@ -1,5 +1,7 @@
 import { CLIENT_NORTHSTAR, INITIATIVE_C360 } from "@/data/bfsiSeed";
+import { activeIndustry } from "@/repositories/mock/simulationScope";
 import type {
+  ApplicabilityFactorId,
   ApplicabilityProfile,
   GovernanceBody,
   GovernancePhase,
@@ -527,14 +529,36 @@ export const seedRisks = (): RiskEntry[] => [
 
 /* ============================ Applicability profile ========================== */
 
-export const seedApplicabilityProfile = (): ApplicabilityProfile => ({
-  initiativeId: INITIATIVE_C360,
-  answers: {
+/** Vertical overlays for the applicability answers — the shared answers stay industry neutral. */
+const APPLICABILITY_BY_INDUSTRY: Record<string, Partial<Record<ApplicabilityFactorId, readonly string[]>>> = {
+  BFSI: {
     industry: ["BFSI"],
     jurisdiction: ["us", "canada"],
     "use-case": ["service", "sales", "onboarding"],
     "data-classification": ["financial-pii"],
     "source-systems": ["salesforce", "core-banking", "snowflake", "third-party-data"],
+  },
+  MFG: {
+    industry: ["MFG"],
+    jurisdiction: ["us", "eu"],
+    "use-case": ["service", "sales", "analytics"],
+    "data-classification": ["confidential"],
+    "source-systems": ["salesforce", "erp", "mes", "plm", "iot-platform", "supplier-portal"],
+  },
+  AUTO: {
+    industry: ["AUTO"],
+    jurisdiction: ["us", "eu"],
+    "use-case": ["service", "sales", "marketing"],
+    "data-classification": ["pii", "confidential"],
+    "source-systems": ["salesforce", "dealer-management", "telematics", "warranty", "parts-catalog"],
+  },
+};
+
+export const seedApplicabilityProfile = (industry: string = activeIndustry()): ApplicabilityProfile => ({
+  initiativeId: INITIATIVE_C360,
+  answers: {
+    ...(APPLICABILITY_BY_INDUSTRY.BFSI as Record<ApplicabilityFactorId, readonly string[]>),
+    ...(APPLICABILITY_BY_INDUSTRY[industry] ?? {}),
     "identity-design": ["probabilistic"],
     "agent-capabilities": ["answer", "summarise", "recommend"],
     "external-actions": ["read"],

@@ -43,6 +43,22 @@ export const DECISION_CRITERIA: readonly DecisionCriterion[] = [
         note: "Federated query against a core banking system is rarely acceptable.",
       }),
       opt("file", "File drops or batch extracts", [2, -2, -1], { disqualifies: ["zero-copy"] }),
+      opt("mes-scada", "MES / SCADA historian inside an OT zone", [2, -2, 1], {
+        disqualifies: ["zero-copy"],
+        note: "Federated query into a plant execution or historian system is not permitted across the OT boundary.",
+      }),
+      opt("plm", "PLM / engineering vault (Teamcenter, Windchill)", [2, -1, 1], {
+        note: "Engineering data needs export-control screening before ingestion.",
+      }),
+      opt("eam-cmms", "EAM / CMMS asset management (Maximo, SAP PM)", [2, -1, 1]),
+      opt("iot-telematics", "IoT or telematics platform (high-cardinality events)", [-1, 1, 2], {
+        note: "Aggregate at the edge or in the platform; only land derived signals.",
+      }),
+      opt("dms", "Dealer management system or dealer network feed", [2, -2, 1], {
+        disqualifies: ["zero-copy"],
+        note: "Dealer estates are heterogeneous; standardise via a broker and land physically.",
+      }),
+      opt("warranty-parts", "Warranty, parts or supplier portal application", [2, -1, 1]),
     ],
   },
   {
@@ -339,8 +355,67 @@ export const DECISION_CRITERIA: readonly DecisionCriterion[] = [
       opt("critical", "Revenue or regulatory critical", [2, -1, 2]),
     ],
   },
+  {
+    id: "ot-boundary",
+    label: "OT / IT boundary",
+    group: "compliance",
+    question: "Does the data cross an operational-technology boundary?",
+    helpText: "Plant, line and vehicle-production networks must not expose an inbound path from cloud services.",
+    defaultWeight: 5,
+    options: [
+      opt("none", "No OT systems in scope", [1, 1, 1]),
+      opt("dmz", "Crosses into an OT DMZ with a broker", [2, -1, 1]),
+      opt("unidirectional", "Unidirectional egress only (diode or one-way broker)", [2, -2, 1], {
+        disqualifies: ["zero-copy"],
+        note: "Federation requires a live inbound connection, which a unidirectional conduit forbids.",
+      }),
+    ],
+  },
+  {
+    id: "telemetry-cardinality",
+    label: "Telemetry cardinality",
+    group: "profile",
+    question: "What signal volume do connected assets or vehicles generate?",
+    helpText: "Raw high-frequency signals should be aggregated before they reach the profile layer.",
+    defaultWeight: 4,
+    options: [
+      opt("none", "No telemetry in scope", [1, 1, 1]),
+      opt("aggregated", "Pre-aggregated signals or daily summaries", [2, 0, 1]),
+      opt("event", "Event-level signals per asset or trip", [0, 2, 2]),
+      opt("high-frequency", "High-frequency raw signals (sub-second)", [-2, 2, 1], {
+        note: "Keep raw signals in the lake and expose derived features only.",
+      }),
+    ],
+  },
+  {
+    id: "export-control",
+    label: "Export control exposure",
+    group: "compliance",
+    question: "Does the dataset contain export-controlled or trade-restricted technical data?",
+    helpText: "Controlled technical data constrains both replication and cross-border federated access.",
+    defaultWeight: 5,
+    options: [
+      opt("none", "No controlled content", [1, 1, 1]),
+      opt("screened", "Controlled attributes identified and excluded", [1, 1, 1]),
+      opt("controlled", "Controlled technical data in scope", [-1, 2, 0], {
+        note: "Leaving controlled data in the source of record reduces the number of controlled copies.",
+      }),
+    ],
+  },
+  {
+    id: "partner-sharing",
+    label: "Partner and dealer sharing",
+    group: "downstream",
+    question: "Will suppliers, dealers or distributors consume this data?",
+    helpText: "Partner consumption requires enforceable partitioning of records by partner.",
+    defaultWeight: 4,
+    options: [
+      opt("internal", "Internal consumption only", [1, 1, 1]),
+      opt("partner-read", "Partner read access to their own records", [2, 0, 2]),
+      opt("partner-write", "Partner submissions flow back (claims, quality, registrations)", [2, -1, 1]),
+    ],
+  },
 ];
-
 export const getCriterion = (id: string): DecisionCriterion | undefined =>
   DECISION_CRITERIA.find((criterion) => criterion.id === id);
 
@@ -613,7 +688,97 @@ export const PLATFORM_GUIDANCE: readonly PlatformConnectivityGuidance[] = [
     egressNotes: "No egress charge for native ingestion.",
     identityNotes: "CRM contact and account records are the anchor for identity resolution.",
   },
+  {
+    platform: "MES / SCADA historian",
+    supported: ["physical", "cached-acceleration"],
+    preferred: "physical",
+    connectorNotes: "Egress through an OT DMZ broker (OPC UA / MQTT bridge or historian export); no inbound path from cloud.",
+    considerations: [
+      "Plant network segmentation dictates a unidirectional conduit",
+      "Timestamps must be reconciled to a single clock source across sites",
+      "Genealogy and lot data are required for traceability evidence",
+    ],
+    egressNotes: "Egress is metered at the plant link; aggregate at the edge before shipping.",
+    identityNotes: "Serial and lot keys are the identity anchors for the installed base; land them physically.",
+  },
+  {
+    platform: "PLM",
+    supported: ["physical", "cached-acceleration"],
+    preferred: "cached-acceleration",
+    connectorNotes: "Teamcenter or Windchill API extraction of BOM, part master and change records.",
+    considerations: [
+      "Export-control classification must be applied before ingestion",
+      "Effectivity dates make BOM snapshots version sensitive",
+      "Change orders drive downstream quality and warranty analysis",
+    ],
+    egressNotes: "Low volume; change-driven delta extraction is normally sufficient.",
+    identityNotes: "Part number plus revision is the canonical key; never merge revisions.",
+  },
+  {
+    platform: "EAM / CMMS",
+    supported: ["physical", "zero-copy", "cached-acceleration"],
+    preferred: "physical",
+    connectorNotes: "Maximo or SAP PM adapters for asset, work order and meter readings.",
+    considerations: [
+      "Work order status transitions drive service agent grounding",
+      "Asset hierarchies must be preserved, not flattened",
+      "Meter readings overlap with IoT telemetry and need de-duplication",
+    ],
+    egressNotes: "Moderate volume; delta extraction on work order change timestamps.",
+    identityNotes: "Asset serial resolves to the installed-base profile; functional location is a secondary key.",
+  },
+  {
+    platform: "IoT / telematics platform",
+    supported: ["zero-copy", "cached-acceleration"],
+    preferred: "cached-acceleration",
+    connectorNotes: "Stream ingestion with edge or platform aggregation; derived features are landed, raw signals are not.",
+    considerations: [
+      "High cardinality makes raw ingestion uneconomic",
+      "Consent and jurisdiction must be resolved before activation",
+      "Device-to-asset or device-to-VIN mapping changes after service events",
+    ],
+    egressNotes: "Volume-driven; aggregation at source is the primary cost control.",
+    identityNotes: "Device identifiers are time-boxed and must be linked to the serial or VIN, never used as the anchor.",
+  },
+  {
+    platform: "Dealer management system",
+    supported: ["physical", "cached-acceleration"],
+    preferred: "physical",
+    connectorNotes: "Standardised dealer feed through a broker; per-dealer variants normalised on ingest.",
+    considerations: [
+      "Dealer estates run heterogeneous DMS versions",
+      "Sharing agreements limit which attributes may be centralised",
+      "Ownership transfers arrive late and out of order",
+    ],
+    egressNotes: "Small per-dealer volumes; the integration cost sits in normalisation, not egress.",
+    identityNotes: "VIN plus dealer customer key drives owner resolution; dealer partitioning must survive resolution.",
+  },
+  {
+    platform: "Warranty & parts systems",
+    supported: ["physical", "cached-acceleration"],
+    preferred: "physical",
+    connectorNotes: "Claims, campaign and parts catalogue extraction with reference-data synchronisation.",
+    considerations: [
+      "Claim adjudication states change after submission",
+      "Parts supersession chains must be resolved for availability answers",
+      "Campaign completion evidence is retained for regulatory reporting",
+    ],
+    egressNotes: "Low to moderate; nightly delta extraction is typical.",
+    identityNotes: "Claims link serial or VIN to part and supplier, enabling quality attribution.",
+  },
+  {
+    platform: "Supplier portal",
+    supported: ["physical", "cached-acceleration"],
+    preferred: "physical",
+    connectorNotes: "Supplier submissions (quality, delivery, capacity) landed with strict per-supplier partitioning.",
+    considerations: [
+      "One supplier must never see another supplier's records",
+      "Submission quality varies and needs validation at ingest",
+      "Scorecards are published back to the portal after harmonisation",
+    ],
+    egressNotes: "Low volume, bidirectional flow.",
+    identityNotes: "Supplier and site resolution must stay hierarchical so performance is attributable to a site.",
+  },
 ];
-
 export const platformGuidanceFor = (platform: string): PlatformConnectivityGuidance | undefined =>
   PLATFORM_GUIDANCE.find((entry) => entry.platform.toLowerCase() === platform.toLowerCase());

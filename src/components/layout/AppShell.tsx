@@ -2,7 +2,8 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import axionLogo from "@/assets/axion-logo.png";
 import { setAgentTenantContext } from "@/services/phase6";
-import { Bell, ChevronRight, GraduationCap, HelpCircle, LogOut, Settings, UserCog } from "lucide-react";
+import { Bell, ChevronRight, Factory, GraduationCap, HelpCircle, LogOut, Settings, UserCog } from "lucide-react";
+import { useActiveIndustry } from "@/hooks/useIndustry";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -199,6 +200,8 @@ const TopBar = () => {
 
           </Select>
 
+          <IndustryBadge />
+
           <Select
             value={initiativeValue}
             onValueChange={(value) => setActiveInitiativeId(value === "none" ? null : value)}
@@ -267,6 +270,17 @@ const TopBar = () => {
         </span>
       </div>
     </header>
+  );
+};
+
+/** Shows the vertical pack driving templates, questions and agent patterns. */
+const IndustryBadge = () => {
+  const { pack } = useActiveIndustry();
+  return (
+    <Badge variant="outline" className="hidden h-9 items-center gap-1.5 px-2.5 text-xs font-semibold lg:inline-flex">
+      <Factory className="h-3.5 w-3.5 text-brand" aria-hidden />
+      {pack.shortName}
+    </Badge>
   );
 };
 
