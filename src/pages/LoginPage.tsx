@@ -137,18 +137,32 @@ const LoginPage = () => {
             ))}
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {ENABLED_INDUSTRY_PACKS.map((pack) => (
-              <span
-                key={pack.id}
-                className="rounded-full border border-border bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground backdrop-blur"
-              >
-                {pack.shortName}
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Available now
               </span>
-            ))}
-            <span className="rounded-full border border-dashed border-border bg-background/50 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
-              HLS · RCPG
-            </span>
+              {ENABLED_INDUSTRY_PACKS.map((pack) => (
+                <span
+                  key={pack.id}
+                  className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary backdrop-blur"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
+                  {pack.shortName}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Coming soon
+              </span>
+              <span className="rounded-full border border-dashed border-muted-foreground/40 bg-background/40 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
+                HLS
+              </span>
+              <span className="rounded-full border border-dashed border-muted-foreground/40 bg-background/40 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
+                RCPG
+              </span>
+            </div>
           </div>
 
           <ul className="grid gap-2 text-sm text-muted-foreground">
