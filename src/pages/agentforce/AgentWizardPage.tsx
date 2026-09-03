@@ -64,6 +64,13 @@ const AgentWizardPage = () => {
 
   const patterns = useAgentPatterns();
   const pattern = AGENT_PATTERNS.find((p) => p.id === form.patternId);
+
+  // Keep the selected pattern valid when the workspace vertical narrows the list.
+  useEffect(() => {
+    if (patterns.length && !patterns.some((item) => item.id === form.patternId)) {
+      setForm((prev) => ({ ...prev, patternId: patterns[0].id }));
+    }
+  }, [patterns, form.patternId]);
   const set = <K extends keyof NewAgentInput>(key: K, value: NewAgentInput[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
