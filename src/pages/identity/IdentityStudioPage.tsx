@@ -201,7 +201,10 @@ const AiSuggestionPanel = ({
 
 const IdentityStudioPage = () => {
   const { toast } = useToast();
+  const { industry, pack } = useActiveIndustry();
+  const industryTemplates = useMemo(() => identityTemplatesForIndustry(industry), [industry]);
   const initiativeId = useActivePhase4InitiativeId();
+
 
   const policies = useIdentityPolicies(initiativeId);
   const createFromTemplate = useCreateIdentityPolicyFromTemplate();
