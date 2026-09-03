@@ -1,6 +1,7 @@
 import { CLIENT_NORTHSTAR, INITIATIVE_C360 } from "@/data/bfsiSeed";
 import { activeIndustry } from "@/repositories/mock/simulationScope";
 import type {
+  ApplicabilityFactorId,
   ApplicabilityProfile,
   GovernanceBody,
   GovernancePhase,
@@ -529,7 +530,7 @@ export const seedRisks = (): RiskEntry[] => [
 /* ============================ Applicability profile ========================== */
 
 /** Vertical overlays for the applicability answers — the shared answers stay industry neutral. */
-const APPLICABILITY_BY_INDUSTRY: Record<string, Record<string, readonly string[]>> = {
+const APPLICABILITY_BY_INDUSTRY: Record<string, Record<ApplicabilityFactorId, readonly string[]>> = {
   BFSI: {
     industry: ["BFSI"],
     jurisdiction: ["us", "canada"],
