@@ -199,6 +199,8 @@ const TopBar = () => {
 
           </Select>
 
+          <IndustryBadge />
+
           <Select
             value={initiativeValue}
             onValueChange={(value) => setActiveInitiativeId(value === "none" ? null : value)}
@@ -267,6 +269,17 @@ const TopBar = () => {
         </span>
       </div>
     </header>
+  );
+};
+
+/** Shows the vertical pack driving templates, questions and agent patterns. */
+const IndustryBadge = () => {
+  const { pack } = useActiveIndustry();
+  return (
+    <Badge variant="outline" className="hidden h-9 items-center gap-1.5 px-2.5 text-xs font-semibold lg:inline-flex">
+      <Factory className="h-3.5 w-3.5 text-brand" aria-hidden />
+      {pack.shortName}
+    </Badge>
   );
 };
 
