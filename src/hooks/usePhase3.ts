@@ -10,8 +10,8 @@ import {
 } from "@/services/phase3";
 import { useActiveInitiativeId } from "@/hooks/usePhase2";
 import type { RoleId } from "@/domain/models";
-import type {
 import { useActiveIndustry } from "@/hooks/useIndustry";
+import type {
   DataAiSuggestion,
   DataProduct,
   DataProductVersion,
