@@ -167,7 +167,11 @@ export type IdentityEntity =
   | "household"
   | "business"
   | "account-relationship"
-  | "advisor-relationship";
+  | "advisor-relationship"
+  | "asset"
+  | "vehicle"
+  | "supplier"
+  | "dealer-relationship";
 
 export type NormalizationType =
   | "name"
@@ -281,6 +285,8 @@ export interface IdentityTemplate {
   readonly id: string;
   readonly name: string;
   readonly entity: IdentityEntity;
+  /** Verticals the template is written for. Omitted means cross-industry. */
+  readonly industries?: readonly Industry[];
   readonly description: string;
   readonly useCases: readonly string[];
   readonly normalizationRules: readonly NormalizationRule[];
